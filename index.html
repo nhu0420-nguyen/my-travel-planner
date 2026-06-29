@@ -1,0 +1,1049 @@
+import { useState } from "react";
+
+const travelData = {
+  quarters: [
+    {
+      id: "q1", name: "QUÝ 1", months: "Tháng 1 – 3",
+      bgGradient: "linear-gradient(135deg, #FDF0E8 0%, #FAE5D3 100%)",
+      accentColor: "#C97D4A",
+      destinations: [
+        {
+          month: "Tháng 1",
+          spots: [
+            {
+              emoji: "🧧", destination: "Hội An – Đà Nẵng", province: "Quảng Nam – Đà Nẵng",
+              tag: "Tết & Lồng Đèn", tagColor: "#E8A87C",
+              weather: "Mát mẻ 18–22°C, có thể mưa nhẹ",
+              highlight: "Hội An đón Tết cực kỳ linh thiêng và lãng mạn với hàng ngàn lồng đèn. Đêm rằm thả đèn hoa đăng trên sông Thu Bồn là khoảnh khắc đẹp nhất năm để quay vlog.",
+              mustSee: ["Phố cổ Hội An ban đêm", "Sông Thu Bồn thả đèn hoa đăng", "Thánh địa Mỹ Sơn", "Cầu Rồng phun lửa Đà Nẵng", "Bà Nà Hills – Cầu Vàng"],
+              food: ["Cao lầu", "Mì Quảng", "Bánh mì Phượng", "Cơm gà Hội An", "Chè bắp Hội An"],
+              cafes: ["The Field (cạnh ruộng lúa)", "Rosie's Cafe", "Hội An Roastery", "Cafe Tan Da Lat view sông"],
+              photoTips: "Chụp 5:30–7:00 sáng tại phố cổ khi chưa đông. Buổi tối từ 18:00 để chụp lồng đèn.",
+              sunrise: "Bãi biển Mỹ Khê – cực đẹp và vắng", sunset: "Cầu Tình Yêu ven sông Hàn hoặc đỉnh Sơn Trà",
+              minDays: "2N1Đ", idealDays: "4N3Đ",
+              itinerary: {
+                "2N1Đ": ["Sáng: Phố cổ chụp ảnh sớm", "Chiều: Thánh địa Mỹ Sơn", "Tối: Thả đèn hoa đăng sông Thu Bồn"],
+                "3N2Đ": ["Ngày 1: Hội An phố cổ + ẩm thực tối", "Ngày 2: Mỹ Sơn + Làng rau Trà Quế", "Ngày 3: Đà Nẵng – Bà Nà Hills – Cầu Vàng"],
+                "4N3Đ": ["Ngày 1: Hội An phố cổ + đêm lồng đèn", "Ngày 2: Mỹ Sơn + Cù Lao Chàm", "Ngày 3: Bà Nà Hills – Cầu Vàng", "Ngày 4: Bán đảo Sơn Trà + Cầu Rồng phun lửa"]
+              },
+              budget: { flight: "800K–1.5tr", hotel: "500K–1.2tr/đêm", food: "300–500K/ngày", transport: "200–400K/ngày", total2n: "3–5tr", total4n: "6–10tr" },
+              packing: ["Áo khoác nhẹ", "Giày đi bộ thoải mái", "Trang phục retro / trung tính hợp lồng đèn", "Áo dài check-in phố cổ"],
+              avoid: "Tránh mùng 1-3 Tết nếu không muốn quá đông"
+            },
+            {
+              emoji: "🏯", destination: "Huế – Tết Cung Đình", province: "Thừa Thiên Huế",
+              tag: "Cố Đô Đầu Xuân", tagColor: "#DDA0DD",
+              weather: "Mát se lạnh 16–22°C, thỉnh thoảng mưa phùn",
+              highlight: "Tháng 1 ở Huế có không khí Tết truyền thống đậm chất cung đình. Đại Nội được trang trí hoa mai vàng rực rỡ, Chùa Thiên Mụ hương khói trầm mặc. Kinh thành Huế đầu xuân là khung hình không đâu có được.",
+              mustSee: ["Đại Nội Huế mùa Tết – hoa mai vàng", "Lăng Khải Định", "Chùa Thiên Mụ", "Sông Hương bình minh", "Chợ Tết Đông Ba"],
+              food: ["Bún bò Huế", "Bánh bèo chén", "Cơm hến", "Chè Huế tháng Tết", "Mứt gừng mứt sen"],
+              cafes: ["L'Indochine trong Đại Nội", "Chocolat Café", "Cafe Phu Xuan", "Moka Coffee view sông"],
+              photoTips: "Đại Nội tháng 1 trang trí hoa mai – chụp 7:00–9:00 sáng. Sông Hương chụp 5:30 sáng sương mù nhẹ.",
+              sunrise: "Bãi biển Thuận An – 30 phút từ trung tâm Huế", sunset: "Cầu Trường Tiền nhìn về phía Tây sông Hương",
+              minDays: "2N1Đ", idealDays: "3N2Đ",
+              itinerary: {
+                "2N1Đ": ["Sáng: Đại Nội + hoa mai Tết", "Chiều: Chùa Thiên Mụ + Sông Hương", "Tối: Chợ đêm Đông Ba + bún bò"],
+                "3N2Đ": ["Ngày 1: Đại Nội + Chợ Đông Ba tối", "Ngày 2: Lăng Khải Định + Lăng Tự Đức + sông Hương", "Ngày 3: Bãi biển Thuận An + về"],
+                "4N3Đ": ["Ngày 1: Đến – Đại Nội – chợ đêm", "Ngày 2: Lăng Minh Mạng + Lăng Khải Định", "Ngày 3: Chùa Thiên Mụ + Phá Tam Giang", "Ngày 4: Thuận An + về"]
+              },
+              budget: { flight: "700K–1.3tr", hotel: "400K–1tr/đêm", food: "200–350K/ngày", transport: "150–300K/ngày", total2n: "2.5–4tr", total4n: "5.5–8.5tr" },
+              packing: ["Áo khoác ấm", "Áo dài check-in Đại Nội", "Giày bệt", "Trang phục tím / vàng hợp kiến trúc cung đình"],
+              avoid: "Tết Đại Nội đông – nên đi sáng sớm trước 8h"
+            },
+            {
+              emoji: "🌊", destination: "Nha Trang Đầu Năm", province: "Khánh Hòa",
+              tag: "Biển Mùa Xuân Vắng", tagColor: "#87CEEB",
+              weather: "Nắng đẹp 24–28°C, biển lặng, ít khách",
+              highlight: "Tháng 1 là mùa thấp điểm của Nha Trang – biển đẹp nhưng gần như vắng người. Giá khách sạn rẻ hơn 40% so với hè. Tháp Bà Ponagar và Viện Hải Dương Học đi thoải mái không chen chúc.",
+              mustSee: ["Tháp Bà Ponagar – Chăm Pa cổ", "Hòn Mun snorkeling", "Viện Hải Dương Học", "Chùa Long Sơn – Phật trắng", "Bãi biển Trần Phú vắng"],
+              food: ["Bún cá Nha Trang", "Nem nướng Ninh Hòa", "Bánh căn tôm mực", "Hải sản Hòn Mun", "Chả cá Nha Trang"],
+              cafes: ["Sailing Club Rooftop", "Ana Marina Cafe", "Lanterns Restaurant Bar", "Cafe Coco Beach"],
+              photoTips: "Bãi biển Trần Phú tháng 1 vắng nhất – chụp 6:00–8:00 sáng một mình. Tháp Bà sáng sớm ánh vàng.",
+              sunrise: "Bãi biển Trần Phú – nhìn ra vịnh rộng", sunset: "Đầm Nha Phu hoặc Vinpearl nhìn về tây",
+              minDays: "2N1Đ", idealDays: "3N2Đ",
+              itinerary: {
+                "2N1Đ": ["Sáng: Tháp Bà + Viện Hải Dương", "Chiều: Tour Hòn Mun snorkeling", "Tối: Bãi biển + hải sản"],
+                "3N2Đ": ["Ngày 1: Tháp Bà + Chùa Long Sơn + phố biển tối", "Ngày 2: Tour 4 đảo cả ngày", "Ngày 3: Hòn Tằm nghỉ dưỡng + về"],
+                "4N3Đ": ["Ngày 1: Đến + phố biển + hải sản", "Ngày 2: Tháp Bà + Viện Hải Dương + Chùa Long Sơn", "Ngày 3: Tour 4 đảo", "Ngày 4: Hòn Tằm + về"]
+              },
+              budget: { flight: "600K–1.1tr", hotel: "400K–1tr/đêm", food: "300–500K/ngày", transport: "150–300K/ngày", total2n: "2.5–4.5tr", total4n: "6–10tr" },
+              packing: ["Đồ bơi + kính lặn", "Áo rash guard", "Kem chống nắng SPF50+", "Đồ trắng / xanh navy để lên hình biển"],
+              avoid: "Tháng 1 biển đôi khi có sóng nhỏ – snorkeling vẫn ổn"
+            }
+          ]
+        },
+        {
+          month: "Tháng 2",
+          spots: [
+            {
+              emoji: "🌸", destination: "Đà Lạt – Hoa Xuân", province: "Lâm Đồng",
+              tag: "Hoa Mimosa & Sương Mù", tagColor: "#A8D8B9",
+              weather: "Mát lạnh 15–20°C, sương mù buổi sáng rất thơ",
+              highlight: "Tháng 2 Đà Lạt mùa hoa mimosa nở rộ. Sương mù buổi sáng tạo khung cảnh cổ tích, cực kỳ phù hợp cho nhiếp ảnh và quay vlog phong cách dreamy.",
+              mustSee: ["Đồi thông sương mù sáng sớm", "Thung lũng Vàng hoa mimosa", "Ga Đà Lạt cổ kính", "Hồ Xuân Hương", "Làng Cù Lần", "Vườn hoa thành phố"],
+              food: ["Bánh tráng nướng Đà Lạt", "Nem nướng Đà Lạt", "Bánh ướt lòng gà", "Kem bơ", "Dâu tây hái tươi"],
+              cafes: ["The Married Beans", "Shelter Coffee", "Là Việt Coffee", "Cafe Tùng – historic 1950s"],
+              photoTips: "Ra đồi thông trước 6:00 sáng để chụp sương mù. Chiều 16:00–17:30 chụp hoàng hôn Hồ Xuân Hương.",
+              sunrise: "Đồi thông Đa Thiện – sương mù tan dần cực đẹp", sunset: "Đồi Robin – nhìn toàn thành phố Đà Lạt",
+              minDays: "2N1Đ", idealDays: "3N2Đ",
+              itinerary: {
+                "2N1Đ": ["Sáng: Đồi thông sương mù + Ga Đà Lạt", "Chiều: Hồ Xuân Hương + Chợ đêm", "Tối: Ẩm thực vỉa hè"],
+                "3N2Đ": ["Ngày 1: Ga Đà Lạt + Hồ Xuân Hương + Chợ đêm", "Ngày 2: Thung lũng Vàng + Làng hoa + Vườn dâu tây", "Ngày 3: Làng Cù Lần + về"],
+                "4N3Đ": ["Ngày 1: Đến + dạo Hồ Xuân Hương", "Ngày 2: Đồi thông sương mù + Ga cổ", "Ngày 3: Thung lũng Vàng + Vườn hoa Vạn Thành", "Ngày 4: Làng Cù Lần + thác Prenn + về"]
+              },
+              budget: { flight: "600K–1tr", hotel: "400K–1tr/đêm", food: "200–400K/ngày", transport: "150–300K/ngày", total2n: "2–4tr", total4n: "5–8tr" },
+              packing: ["Áo khoác dày / len", "Khăn quàng cổ", "Trang phục pastel / boho rất hợp Đà Lạt", "Giày sneakers"],
+              avoid: "Tránh cuối tuần vì người HCM lên rất đông"
+            },
+            {
+              emoji: "🌺", destination: "Quy Nhơn – Biển Hoang Sơ", province: "Bình Định",
+              tag: "Biển Đầu Năm Vắng", tagColor: "#FFB6C1",
+              weather: "Nắng ấm 22–27°C, ít khách, biển bắt đầu trong",
+              highlight: "Tháng 2 Quy Nhơn vắng du khách nhưng trời đẹp dần. Eo Gió và Kỳ Co còn nguyên vẻ hoang sơ. Tháp Đôi và Tháp Bánh Ít là di sản Chăm Pa ít ai biết nhưng rất photogenic.",
+              mustSee: ["Eo Gió – vách đá biển ngoạn mục", "Bãi Kỳ Co nước xanh ngọc", "Tháp Đôi Quy Nhơn", "Tháp Bánh Ít", "Ghềnh Ráng Tiên Sa"],
+              food: ["Bún chả cá Quy Nhơn", "Bánh xèo tôm nhảy", "Chả cua Ghềnh Ráng", "Cua huỳnh đế hấp", "Bún sứa"],
+              cafes: ["Cafe Nở view biển", "The Workshop Quy Nhơn", "Cafe Tối Quy Nhơn", "Clouds Cafe"],
+              photoTips: "Eo Gió chụp chiều 16:30–18:00 nắng vàng và bóng đổ đẹp. Kỳ Co chụp 7:00–9:00 sáng nước trong nhất.",
+              sunrise: "Ghềnh Ráng Tiên Sa – đẹp như tranh vẽ", sunset: "Eo Gió – hoàng hôn trên vách đá hùng vĩ",
+              minDays: "2N1Đ", idealDays: "3N2Đ",
+              itinerary: {
+                "2N1Đ": ["Sáng: Eo Gió + Kỳ Co", "Chiều: Tháp Đôi + Ghềnh Ráng", "Tối: Hải sản Quy Nhơn"],
+                "3N2Đ": ["Ngày 1: Đến + Ghềnh Ráng + hải sản tối", "Ngày 2: Eo Gió sáng + Kỳ Co + hoàng hôn", "Ngày 3: Tháp Đôi + Tháp Bánh Ít + về"],
+                "4N3Đ": ["Ngày 1: Đến + Ghềnh Ráng", "Ngày 2: Eo Gió + Kỳ Co cả ngày", "Ngày 3: Đảo Lý Sơn day trip", "Ngày 4: Tháp Chăm + về"]
+              },
+              budget: { flight: "600K–1.1tr", hotel: "400K–900K/đêm", food: "200–400K/ngày", transport: "200–350K/ngày", total2n: "2.5–4tr", total4n: "5–8tr" },
+              packing: ["Kem chống nắng SPF50+", "Giày đế bám (leo đá Eo Gió)", "Đồ bơi nhẹ", "Màu trắng / xanh pastel để lên hình biển"],
+              avoid: "Tháng 2 thỉnh thoảng còn gió mùa Đông Bắc – kiểm tra thời tiết"
+            },
+            {
+              emoji: "🏝️", destination: "Côn Đảo – Mùa Vắng", province: "Bà Rịa – Vũng Tàu",
+              tag: "Đảo Hoang Sơ Giá Tốt", tagColor: "#98D8C8",
+              weather: "Nắng đẹp 27–31°C, biển lặng, mùa thấp điểm",
+              highlight: "Tháng 2 là mùa thấp điểm Côn Đảo – giá phòng rẻ 30–40%, biển đẹp và trong. Đây là lúc lý tưởng để trải nghiệm đảo nguyên sơ không chen chúc.",
+              mustSee: ["Bãi An Hải tắm biển", "Nghĩa trang Hàng Dương – tâm linh", "Vườn quốc gia Côn Đảo", "Bãi Đầm Trầu biển đẹp nhất", "Cầu tàu 914 lịch sử"],
+              food: ["Hải sản tươi Côn Đảo", "Bún bà Hai", "Sò điệp nướng mỡ hành", "Bánh mì cô Loan", "Ghẹ hấp Côn Đảo"],
+              cafes: ["Six Senses Bar", "ATC Hotel Pool Bar", "Cafe ven biển Bến Đầm"],
+              photoTips: "Bãi Đầm Trầu chụp 5:30 sáng khi trời hồng và vắng tuyệt đối. Hàng Dương chụp ban ngày ánh sáng tốt.",
+              sunrise: "Bãi Đầm Trầu – mặt trời mọc từ biển tuyệt đẹp", sunset: "Bãi Nhát hoặc đỉnh núi Chúa",
+              minDays: "2N1Đ", idealDays: "3N2Đ",
+              itinerary: {
+                "2N1Đ": ["Sáng: Bãi An Hải tắm biển", "Chiều: Nghĩa trang Hàng Dương + lịch sử", "Tối: Hải sản + biển đêm"],
+                "3N2Đ": ["Ngày 1: Đến + Bãi An Hải + hải sản", "Ngày 2: Tour Hòn Bảy Cạnh snorkeling", "Ngày 3: Bãi Đầm Trầu bình minh + về"],
+                "4N3Đ": ["Ngày 1: Đến + biển chiều + hải sản", "Ngày 2: Hòn Bảy Cạnh lặn san hô", "Ngày 3: Vườn QG + Hàng Dương + biển tối", "Ngày 4: Bãi Đầm Trầu bình minh + về"]
+              },
+              budget: { flight: "900K–1.8tr", hotel: "500K–1.5tr/đêm (off-peak)", food: "400–700K/ngày", transport: "200–350K/ngày", total2n: "3.5–6.5tr", total4n: "7.5–13tr" },
+              packing: ["Đồ bơi + kính lặn", "Đèn pin nhỏ đêm tối", "Giày thể thao", "Trang phục trắng / trơn để lên hình biển trong"],
+              avoid: "Đặt phòng trước 1 tháng – Côn Đảo ít phòng dù thấp điểm"
+            }
+          ]
+        },
+        {
+          month: "Tháng 3",
+          spots: [
+            {
+              emoji: "🌊", destination: "Quy Nhơn – Phú Yên", province: "Bình Định – Phú Yên",
+              tag: "Ghềnh Đá Đĩa & Biển Xanh", tagColor: "#87CEEB",
+              weather: "Nắng đẹp 25–30°C, biển bắt đầu trong xanh trở lại",
+              highlight: "Tháng 3 là thời điểm vàng cho cụm Quy Nhơn – Phú Yên. Ghềnh Đá Đĩa, Eo Gió, Mũi Điện (nơi đón bình minh sớm nhất VN) là thiên đường cho content creator.",
+              mustSee: ["Ghềnh Đá Đĩa Phú Yên", "Bãi Xép – phim Hoa Vàng Cỏ Xanh", "Mũi Điện – Hải đăng Đại Lãnh", "Eo Gió Quy Nhơn", "Bãi Kỳ Co", "Tháp Đôi Quy Nhơn"],
+              food: ["Bún chả cá Quy Nhơn", "Bánh xèo tôm nhảy", "Bánh canh chả cá Phú Yên", "Cua huỳnh đế", "Gỏi cá mai"],
+              cafes: ["Cafe Nở view biển", "The Workshop Quy Nhơn", "Cafe Nước Phú Yên", "Clouds Coffee"],
+              photoTips: "Ghềnh Đá Đĩa đẹp nhất bình minh 5:30–7:00. Eo Gió chụp chiều 16:30–18:00. Mang tripod chụp long exposure sóng.",
+              sunrise: "Mũi Điện – Hải đăng Đại Lãnh, sớm nhất VN 5:20 sáng", sunset: "Eo Gió – hoàng hôn trên vách đá",
+              minDays: "2N1Đ", idealDays: "4N3Đ",
+              itinerary: {
+                "2N1Đ": ["Sáng: Ghềnh Đá Đĩa + Bãi Xép", "Chiều: Mũi Điện (ngủ lại)", "Tối: Ẩm thực Tuy Hòa"],
+                "3N2Đ": ["Ngày 1: Phú Yên – Ghềnh Đá Đĩa – Bãi Xép", "Ngày 2: Mũi Điện bình minh – Quy Nhơn – Eo Gió", "Ngày 3: Kỳ Co – Tháp Đôi + về"],
+                "4N3Đ": ["Ngày 1: Ghềnh Đá Đĩa – Bãi Xép", "Ngày 2: Mũi Điện bình minh – Vũng Rô – Quy Nhơn", "Ngày 3: Eo Gió – Kỳ Co – Tháp Đôi", "Ngày 4: Ghềnh Ráng Tiên Sa + về"]
+              },
+              budget: { flight: "700K–1.2tr", hotel: "400K–900K/đêm", food: "200–400K/ngày", transport: "200–350K/ngày", total2n: "2.5–4.5tr", total4n: "5.5–9tr" },
+              packing: ["Kem chống nắng SPF50+", "Kính mát polarized", "Đồ bơi", "Sandal + giày thể thao", "Màu trắng / xanh biển để lên hình"],
+              avoid: "Book phòng sớm vì Quy Nhơn ít khách sạn tốt"
+            },
+            {
+              emoji: "🌴", destination: "Phú Quốc – Mùa Khô", province: "Kiên Giang",
+              tag: "Đảo Ngọc Đẹp Nhất Năm", tagColor: "#98FB98",
+              weather: "Nắng đẹp 28–33°C, biển hoàn toàn lặng sóng, không mưa",
+              highlight: "Tháng 3 là tháng đẹp nhất Phú Quốc – trời nắng hoàn toàn, biển trong như gương. Bãi Sao và Sunset Beach kết hợp tour đảo 3 hòn tạo hành trình đảo ngọc hoàn hảo.",
+              mustSee: ["Bãi Sao – top 10 biển châu Á", "Sunset Sanato Beach", "Tour 3 đảo Hòn Thơm snorkeling", "Grand World Phú Quốc đêm", "Làng chài Rạch Vẹm bình minh"],
+              food: ["Ghẹ Phú Quốc", "Nhum nướng mỡ hành", "Bún quậy", "Gỏi cá trích", "Nước mắm Phú Quốc"],
+              cafes: ["Mango Bay view biển", "Cafe del Mar", "Ong & Anh Sunset Bar", "The Chill Sky Bar"],
+              photoTips: "Bãi Sao đẹp nhất 6:00–8:00 sáng. Hoàng hôn bãi Tây 17:30–18:30 – dùng filter warm tone.",
+              sunrise: "Bãi Ông Lăng – hoàn toàn vắng lặng sáng sớm", sunset: "Bãi Tây (Sunset Beach) – đẹp nhất Việt Nam",
+              minDays: "2N1Đ", idealDays: "4N3Đ",
+              itinerary: {
+                "2N1Đ": ["Sáng: Bãi Sao", "Chiều: Grand World dạo", "Tối: Chợ đêm Dinh Cậu + hoàng hôn bãi Tây"],
+                "3N2Đ": ["Ngày 1: Bãi Sao + hoàng hôn bãi Tây", "Ngày 2: Tour 3 đảo – Hòn Thơm lặn san hô", "Ngày 3: Grand World + Vinwonders + về"],
+                "4N3Đ": ["Ngày 1: Bãi Sao + hoàng hôn", "Ngày 2: Tour 3 đảo cả ngày", "Ngày 3: Grand World + Vinwonders", "Ngày 4: Rạch Vẹm + cáp treo Hòn Thơm + về"]
+              },
+              budget: { flight: "700K–1.5tr", hotel: "700K–2tr/đêm", food: "400–800K/ngày", transport: "200–400K/ngày", total2n: "3.5–7tr", total4n: "9–16tr" },
+              packing: ["Đồ bơi + phao bơi", "Váy hoa / trang phục resort màu sắc", "Kem chống nắng SPF70+", "Dép xỏ ngón + giày thể thao"],
+              avoid: "Tháng 3 là cao điểm – đặt phòng trước 2 tháng"
+            },
+            {
+              emoji: "🏕️", destination: "Đà Nẵng – Ngũ Hành Sơn", province: "Đà Nẵng",
+              tag: "Khám Phá Chùa & Hang Động", tagColor: "#DDA0DD",
+              weather: "Nắng ấm 24–29°C, mùa khô bắt đầu – rất lý tưởng",
+              highlight: "Tháng 3 Đà Nẵng vào mùa đẹp nhất trước khi vào hè nóng. Ngũ Hành Sơn với hệ thống hang động và chùa chiền trong núi đá hoa cương là điểm check-in văn hóa cực độc.",
+              mustSee: ["Ngũ Hành Sơn – hang động & chùa", "Biển Mỹ Khê – Forbes sexy beach", "Bán đảo Sơn Trà + Chùa Linh Ứng", "Bà Nà Hills – Cầu Vàng", "Cầu Rồng + phố đêm"],
+              food: ["Mì Quảng", "Bánh tráng cuốn thịt heo", "Hải sản Mỹ Khê", "Bún mắm nêm", "Bánh mì Đà Nẵng"],
+              cafes: ["Horizon Sky Bar view toàn thành phố", "Cafe Me view biển", "The Coffee House Cầu Rồng", "Maison de Campagne"],
+              photoTips: "Ngũ Hành Sơn chụp 7:00–10:00 sáng ánh sáng xuyên hang. Biển Mỹ Khê vắng nhất trước 7:00 sáng.",
+              sunrise: "Biển Mỹ Khê – bầu trời cam tím", sunset: "Đỉnh Sơn Trà hoặc Bà Nà Hills",
+              minDays: "2N1Đ", idealDays: "4N3Đ",
+              itinerary: {
+                "2N1Đ": ["Sáng: Ngũ Hành Sơn hang động", "Chiều: Biển Mỹ Khê", "Tối: Cầu Rồng phun lửa"],
+                "3N2Đ": ["Ngày 1: Biển Mỹ Khê + Cầu Rồng tối", "Ngày 2: Bà Nà Hills cả ngày", "Ngày 3: Ngũ Hành Sơn + Sơn Trà + về"],
+                "4N3Đ": ["Ngày 1: Đến + biển + hải sản", "Ngày 2: Bà Nà Hills – Cầu Vàng", "Ngày 3: Sơn Trà + Chùa Linh Ứng + phố đêm", "Ngày 4: Ngũ Hành Sơn + về"]
+              },
+              budget: { flight: "700K–1.3tr", hotel: "500K–1.2tr/đêm", food: "300–500K/ngày", transport: "200–400K/ngày", total2n: "3–5tr", total4n: "6.5–11tr" },
+              packing: ["Đồ bơi", "Giày đế bằng – leo Ngũ Hành Sơn", "Kem chống nắng SPF50+", "Áo khoác nhẹ cho buổi tối"],
+              avoid: "Tránh cuối tuần nếu không muốn Bà Nà đông; đi thứ 3–5 lý tưởng"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      id: "q2", name: "QUÝ 2", months: "Tháng 4 – 6",
+      bgGradient: "linear-gradient(135deg, #FFF8F0 0%, #FEECD9 100%)",
+      accentColor: "#E07B39",
+      destinations: [
+        {
+          month: "Tháng 4",
+          spots: [
+            {
+              emoji: "🏯", destination: "Huế – Cố Đô Mùa Đẹp", province: "Thừa Thiên Huế",
+              tag: "Di Sản UNESCO", tagColor: "#DDA0DD",
+              weather: "Nắng đẹp mát mẻ 24–28°C – đẹp nhất trong năm",
+              highlight: "Tháng 4 là thời điểm vàng để thăm Huế. Festival Huế (năm chẵn) là sự kiện văn hóa lớn nhất Việt Nam. Đại Nội, lăng tẩm và ẩm thực cung đình tạo hành trình văn hóa hoàn hảo.",
+              mustSee: ["Đại Nội Huế", "Lăng Khải Định", "Lăng Tự Đức", "Chùa Thiên Mụ", "Chợ Đông Ba", "Sông Hương thuyền Rồng"],
+              food: ["Bún bò Huế", "Cơm hến", "Bánh bèo chén", "Bánh lọc", "Chè Huế", "Nem lụi"],
+              cafes: ["L'Indochine Café trong Đại Nội", "Cafe Hue by Night", "Chocolat Café", "Moka Coffee view sông Hương"],
+              photoTips: "Đại Nội chụp 7:00–9:00 sáng ánh vàng và ít khách. Lăng Khải Định chụp 14:00–16:00 lý tưởng.",
+              sunrise: "Bãi biển Thuận An – 30 phút từ Huế", sunset: "Cầu Trường Tiền nhìn về phía Tây sông Hương",
+              minDays: "2N1Đ", idealDays: "3N2Đ",
+              itinerary: {
+                "2N1Đ": ["Sáng: Đại Nội + Cầu Trường Tiền", "Chiều: Chùa Thiên Mụ + Sông Hương", "Tối: Chợ đêm Đông Ba + bún bò"],
+                "3N2Đ": ["Ngày 1: Đại Nội + Cầu Trường Tiền + chợ đêm", "Ngày 2: Lăng Khải Định + Lăng Tự Đức", "Ngày 3: Bãi biển Thuận An + về"],
+                "4N3Đ": ["Ngày 1: Đến – Đại Nội – chợ đêm", "Ngày 2: Lăng Khải Định + Lăng Minh Mạng", "Ngày 3: Chùa Thiên Mụ + Bãi Thuận An", "Ngày 4: Phá Tam Giang + về"]
+              },
+              budget: { flight: "700K–1.3tr", hotel: "400K–1tr/đêm", food: "200–350K/ngày", transport: "150–300K/ngày", total2n: "2.5–4tr", total4n: "5.5–8.5tr" },
+              packing: ["Váy dài / áo dài – bắt buộc vào Đại Nội", "Giày bệt", "Trang phục màu trầm / tím hợp kiến trúc cung đình"],
+              avoid: "Festival Huế (năm chẵn) rất đẹp nhưng giá tăng gấp đôi – book trước 3 tháng"
+            },
+            {
+              emoji: "🌊", destination: "Đà Nẵng – Mùa Biển Đẹp", province: "Đà Nẵng",
+              tag: "Biển Xuân & Sơn Trà", tagColor: "#87CEEB",
+              weather: "Nắng vàng 26–30°C, biển trong xanh, gió biển dịu",
+              highlight: "Tháng 4 Đà Nẵng biển đẹp và chưa quá đông khách hè. Bán đảo Sơn Trà mùa này hoa đỏ bằng lăng nở rộ, kết hợp biển Mỹ Khê tạo hành trình thiên nhiên hoàn hảo.",
+              mustSee: ["Biển Mỹ Khê vắng hơn mùa hè", "Bán đảo Sơn Trà + Chùa Linh Ứng", "Cầu Vàng Bà Nà Hills", "Cầu Rồng phun lửa tối t7-CN", "Ngũ Hành Sơn"],
+              food: ["Hải sản tươi bãi Mỹ Khê", "Mì Quảng đặc sản", "Bánh tráng cuốn thịt heo", "Bún mắm nêm Đà Nẵng"],
+              cafes: ["Horizon Sky Bar", "Cafe Me view biển", "The Coffee House Cầu Rồng", "99 Cafe Rooftop"],
+              photoTips: "Sơn Trà chụp 6:00–8:00 sáng giờ vàng. Biển Mỹ Khê vắng nhất trước 7:00 sáng.",
+              sunrise: "Biển Mỹ Khê hoặc đỉnh Sơn Trà", sunset: "Cáp treo Bà Nà Hills nhìn về biển",
+              minDays: "2N1Đ", idealDays: "3N2Đ",
+              itinerary: {
+                "2N1Đ": ["Sáng: Biển Mỹ Khê + ăn sáng hải sản", "Chiều: Sơn Trà + Chùa Linh Ứng", "Tối: Cầu Rồng phun lửa"],
+                "3N2Đ": ["Ngày 1: Biển Mỹ Khê + Cầu Rồng tối", "Ngày 2: Bà Nà Hills cả ngày", "Ngày 3: Sơn Trà + Ngũ Hành Sơn + về"],
+                "4N3Đ": ["Ngày 1: Đến + biển + hải sản tối", "Ngày 2: Bà Nà Hills – Cầu Vàng", "Ngày 3: Sơn Trà + Bảo tàng Chăm", "Ngày 4: Hội An day trip + về"]
+              },
+              budget: { flight: "800K–1.4tr", hotel: "500K–1.2tr/đêm", food: "300–500K/ngày", transport: "200–400K/ngày", total2n: "3–5.5tr", total4n: "7–12tr" },
+              packing: ["Đồ bơi + áo tắm", "Kem chống nắng SPF50+", "Kính mát", "Set outfit màu sáng / pastel để lên hình biển"],
+              avoid: "Tháng 4 giá còn ổn trước khi vào hè – lý tưởng để đi trước cao điểm"
+            },
+            {
+              emoji: "🎋", destination: "Hội An – Phố Cổ Vàng Óng", province: "Quảng Nam",
+              tag: "Phố Cổ Mùa Khô", tagColor: "#FFD700",
+              weather: "Nắng vừa 26–30°C, không mưa, trời trong xanh tuyệt đẹp",
+              highlight: "Tháng 4 Hội An mùa khô lý tưởng – phố cổ nắng vàng, hoa giấy rực rỡ. Rằm âm lịch tháng 3 là đêm phố không đèn điện cực kỳ huyền ảo. Cù Lao Chàm tháng 4 bắt đầu mở cửa mùa biển.",
+              mustSee: ["Phố cổ Hội An đêm lồng đèn", "Cù Lao Chàm – đảo di sản", "Thánh địa Mỹ Sơn hoàng hôn", "Làng rau Trà Quế", "Bãi biển Cửa Đại"],
+              food: ["Cao lầu Hội An", "Bánh mì Phượng", "Cơm gà Hội An", "Mì Quảng", "White rose bánh hạt lựu"],
+              cafes: ["The Field – ruộng lúa", "Rosie's Cafe Hội An", "Hội An Roastery", "Cargo Club Hoi An"],
+              photoTips: "Phố cổ đẹp nhất 5:30–7:00 sáng và 17:30–19:30 tối lồng đèn lên. Rằm âm lịch tắt điện – cực kỳ đặc biệt.",
+              sunrise: "Cửa Đại – bãi biển nhìn ra sông Thu Bồn", sunset: "Phố cổ nhìn về phía sông / đồng lúa Trà Quế",
+              minDays: "2N1Đ", idealDays: "3N2Đ",
+              itinerary: {
+                "2N1Đ": ["Sáng: Phố cổ sớm + Chợ Hội An", "Chiều: Mỹ Sơn", "Tối: Phố đèn lồng + thả đèn"],
+                "3N2Đ": ["Ngày 1: Phố cổ + ẩm thực tối", "Ngày 2: Cù Lao Chàm day trip", "Ngày 3: Mỹ Sơn + Làng Trà Quế + về"],
+                "4N3Đ": ["Ngày 1: Phố cổ + đêm lồng đèn", "Ngày 2: Cù Lao Chàm cả ngày", "Ngày 3: Mỹ Sơn + Trà Quế + Cửa Đại", "Ngày 4: Xe đạp làng quê + về"]
+              },
+              budget: { flight: "700K–1.3tr", hotel: "500K–1.2tr/đêm", food: "300–500K/ngày", transport: "150–300K/ngày", total2n: "3–5tr", total4n: "6.5–10tr" },
+              packing: ["Váy hoa / áo dài check-in phố cổ", "Giày đi bộ thoải mái", "Màu vàng / trắng / cam hợp sắc vàng Hội An"],
+              avoid: "Rằm tháng 3 âm lịch đặc biệt đẹp nhưng rất đông – đặt phòng sớm"
+            }
+          ]
+        },
+        {
+          month: "Tháng 5",
+          spots: [
+            {
+              emoji: "🏖️", destination: "Đà Nẵng – DIFF Pháo Hoa", province: "Đà Nẵng",
+              tag: "Festival Pháo Hoa Quốc Tế", tagColor: "#FF69B4",
+              weather: "Nắng nóng 28–34°C, biển đẹp nhất, ít sóng",
+              highlight: "Festival pháo hoa quốc tế DIFF (tháng 5–6) là sự kiện không thể bỏ lỡ. Biển Mỹ Khê mùa hè trong xanh hoàn hảo. Đêm Đà Nẵng sôi động nhất năm.",
+              mustSee: ["Biển Mỹ Khê mùa hè đỉnh điểm", "Bà Nà Hills – Cầu Vàng", "DIFF pháo hoa bờ sông Hàn", "Cầu Rồng phun lửa đêm", "Ngũ Hành Sơn"],
+              food: ["Hải sản tươi Mỹ Khê", "Mì Quảng", "Bánh tráng cuốn thịt heo", "Bún mắm nêm", "Chả mực"],
+              cafes: ["Horizon Sky Bar", "Cafe Me view biển", "Maison 1888 tại Bà Nà", "The Coffee House view Cầu Rồng"],
+              photoTips: "Pháo hoa DIFF chụp từ cầu Nguyễn Văn Trỗi hoặc bờ đông sông Hàn. Biển Mỹ Khê 5:30–7:00 sáng còn vắng.",
+              sunrise: "Biển Mỹ Khê – bầu trời cam tím", sunset: "Đỉnh Sơn Trà hoặc Bà Nà Hills",
+              minDays: "2N1Đ", idealDays: "4N3Đ",
+              itinerary: {
+                "2N1Đ": ["Sáng: Biển Mỹ Khê + ăn sáng hải sản", "Chiều: Bà Nà Hills – Cầu Vàng", "Tối: Xem pháo hoa DIFF"],
+                "3N2Đ": ["Ngày 1: Biển Mỹ Khê + Cầu Rồng tối", "Ngày 2: Bà Nà Hills cả ngày", "Ngày 3: Sơn Trà + pháo hoa tối"],
+                "4N3Đ": ["Ngày 1: Đến + biển + hải sản", "Ngày 2: Bà Nà Hills – Cầu Vàng", "Ngày 3: Sơn Trà + Bảo tàng Chăm + phố đêm", "Ngày 4: Ngũ Hành Sơn + pháo hoa"]
+              },
+              budget: { flight: "800K–1.5tr", hotel: "600K–1.5tr/đêm", food: "300–600K/ngày", transport: "200–400K/ngày", total2n: "3.5–6tr", total4n: "8–13tr" },
+              packing: ["Đồ bơi + áo tắm", "Kem chống nắng SPF50+", "Kính mát", "Nón rộng vành", "Set outfit màu sáng / pastel"],
+              avoid: "Book trước 2–3 tháng vì mùa hè Đà Nẵng rất đông, đặc biệt dịp DIFF"
+            },
+            {
+              emoji: "🏝️", destination: "Lý Sơn – Đảo Núi Lửa", province: "Quảng Ngãi",
+              tag: "Đảo Địa Chất Độc Nhất", tagColor: "#98D8C8",
+              weather: "Nắng đẹp 27–31°C, biển trong, gió biển mát",
+              highlight: "Lý Sơn được tạo nên từ miệng núi lửa triệu năm, địa hình độc nhất VN. Tháng 5 biển xanh ngọc, ít khách. Đặc sản tỏi Lý Sơn thơm nhất năm.",
+              mustSee: ["Miệng núi lửa Thới Lới – view 360°", "Hang Câu – biển xanh ngọc", "Chùa Hang trong hang đá", "Đỉnh Giếng Tiền – bình minh đẹp", "Mộ lính Hoàng Sa"],
+              food: ["Tỏi Lý Sơn – đặc sản nổi tiếng nhất", "Hải sản đảo tươi", "Mực nhảy nướng", "Cá ngừ đại dương", "Gỏi tỏi Lý Sơn"],
+              cafes: ["Cafe trên đỉnh núi lửa Thới Lới", "Nhà hàng ven biển Lý Sơn"],
+              photoTips: "Đỉnh Thới Lới chụp 5:30 sáng bình minh + toàn cảnh 360°. Hang Câu chụp 10:00–14:00 ánh sáng xuyên qua đẹp.",
+              sunrise: "Đỉnh Giếng Tiền hoặc núi lửa Thới Lới", sunset: "Bờ tây đảo Lý Sơn nhìn ra biển",
+              minDays: "2N1Đ", idealDays: "3N2Đ",
+              itinerary: {
+                "2N1Đ": ["Sáng: Thới Lới + Hang Câu", "Chiều: Chùa Hang + biển tắm", "Tối: Hải sản + đảo đêm"],
+                "3N2Đ": ["Ngày 1: Tàu ra đảo + Hang Câu + biển", "Ngày 2: Thới Lới bình minh + Chùa Hang + mộ lính Hoàng Sa", "Ngày 3: Mua tỏi + tàu về đất liền"],
+                "4N3Đ": ["Ngày 1: Ra đảo + Hang Câu", "Ngày 2: Thới Lới bình minh + quanh đảo", "Ngày 3: Đảo Bé snorkeling", "Ngày 4: Mua đặc sản + tàu về"]
+              },
+              budget: { flight: "600K–1tr (đến Chu Lai hoặc Quảng Ngãi)", hotel: "400K–800K/đêm", food: "300–500K/ngày", transport: "Tàu ra đảo 200K/người khứ hồi", total2n: "2.5–4.5tr", total4n: "5–9tr" },
+              packing: ["Giày đế bám leo núi lửa", "Kem chống nắng SPF70+", "Áo chống nắng dài tay", "Tiền mặt – đảo ít ATM"],
+              avoid: "Chỉ có tàu từ Sa Kỳ – kiểm tra lịch tàu và thời tiết biển trước khi đi"
+            },
+            {
+              emoji: "🌊", destination: "Mũi Né – Phan Thiết", province: "Bình Thuận",
+              tag: "Đồi Cát & Suối Tiên", tagColor: "#DEB887",
+              weather: "Nắng nóng 29–35°C, gió biển mạnh – đặc sản Mũi Né",
+              highlight: "Tháng 5 Mũi Né nắng đẹp, gió lớn. Đồi cát đỏ và cát trắng rực rỡ. Suối Tiên – con suối đỏ cam kỳ lạ – đẹp nhất vào mùa khô. Chỉ 4–5 tiếng xe từ HCM.",
+              mustSee: ["Đồi cát đỏ sunrise", "Đồi cát trắng", "Suối Tiên – suối đỏ cam kỳ lạ", "Làng chài bình minh", "Tháp Chăm Poshanư"],
+              food: ["Bánh canh chả cá", "Gỏi cuốn Phan Thiết", "Hải sản làng chài tươi", "Thanh long Bình Thuận", "Nước mắm Phan Thiết"],
+              cafes: ["Drift Café Mũi Né", "The Hammock Cafe", "Chez Leon bãi biển", "Sandunes Beach Resort Bar"],
+              photoTips: "Đồi cát đỏ 5:30–7:00 sáng màu đất son rực rỡ. Làng chài họp chợ 5:00–7:00 sáng thuyền thúng cực đẹp.",
+              sunrise: "Đồi cát đỏ Mũi Né", sunset: "Bãi biển Đồi Dương hoặc resort ven biển",
+              minDays: "2N1Đ", idealDays: "3N2Đ",
+              itinerary: {
+                "2N1Đ": ["5:30 sáng: Đồi cát đỏ + làng chài", "Chiều: Suối Tiên + cát trắng", "Tối: Hải sản ven biển"],
+                "3N2Đ": ["Ngày 1: Đến chiều – biển – hải sản tối", "Ngày 2: Đồi cát đỏ sáng – Suối Tiên – cát trắng", "Ngày 3: Làng chài – Tháp Poshanư – về HCM"],
+                "4N3Đ": ["Ngày 1: Đến – biển – resort", "Ngày 2: Đồi cát đỏ sáng sớm – nghỉ trưa", "Ngày 3: Suối Tiên – cát trắng – làng chài chiều", "Ngày 4: Tháp Poshanư + về"]
+              },
+              budget: { flight: "Xe khách HCM: 200–300K (4–5 tiếng)", hotel: "500K–1.5tr/đêm resort biển", food: "250–450K/ngày", transport: "100–250K/ngày", total2n: "1.5–3.5tr", total4n: "4–8tr" },
+              packing: ["Kính mát chống cát", "Khăn trùm đầu (gió mạnh)", "Dép + giày thể thao", "Màu nâu đất / be / trắng để lên hình đồi cát"],
+              avoid: "Tháng 5–6 gió mạnh nhất Mũi Né – không phù hợp bơi xa bờ"
+            }
+          ]
+        },
+        {
+          month: "Tháng 6",
+          spots: [
+            {
+              emoji: "🌴", destination: "Phú Quốc – Hoàng Hôn", province: "Kiên Giang",
+              tag: "Đảo Ngọc & Hoàng Hôn Đẹp Nhất", tagColor: "#FFD700",
+              weather: "Nắng ban ngày, mưa chiều ngắn – vẫn rất đẹp để đi",
+              highlight: "Tháng 6 là tháng cuối mùa khô Phú Quốc. Biển tây có hoàng hôn đẹp nhất Việt Nam – mặt trời lặn xuống biển tại Sunset Sanato hoặc bãi Tây không đâu sánh được.",
+              mustSee: ["Bãi Sao – top 10 biển châu Á", "Sunset Sanato Beach hoàng hôn", "VinWonders Phú Quốc", "Grand World Phú Quốc", "Hòn Thơm – cáp treo biển", "Làng chài Rạch Vẹm"],
+              food: ["Ghẹ Phú Quốc", "Nhum nướng mỡ hành", "Bún quậy", "Gỏi cá trích", "Nước mắm Phú Quốc"],
+              cafes: ["Mango Bay view biển", "Cafe del Mar", "Ong & Anh Sunset Bar", "The Chill Sky Bar"],
+              photoTips: "Bãi Sao 6:00–8:00 sáng. Hoàng hôn bãi Tây 17:30–18:30 – filter warm tone cực đẹp.",
+              sunrise: "Bãi Ông Lăng hoặc cáp treo Hòn Thơm", sunset: "Bãi Tây (Sunset Beach) – đẹp nhất Việt Nam",
+              minDays: "2N1Đ", idealDays: "4N3Đ",
+              itinerary: {
+                "2N1Đ": ["Sáng: Bãi Sao", "Chiều: Grand World", "Tối: Chợ đêm Dinh Cậu + hoàng hôn bãi Tây"],
+                "3N2Đ": ["Ngày 1: Bãi Sao + hoàng hôn bãi Tây", "Ngày 2: Tour 3 đảo – Hòn Thơm lặn san hô", "Ngày 3: Grand World + Vinwonders + về"],
+                "4N3Đ": ["Ngày 1: Bãi Sao + hoàng hôn", "Ngày 2: Tour 3 đảo cả ngày", "Ngày 3: Grand World + Vinwonders", "Ngày 4: Rạch Vẹm + cáp treo Hòn Thơm + về"]
+              },
+              budget: { flight: "700K–1.5tr", hotel: "700K–2tr/đêm", food: "400–800K/ngày", transport: "200–400K/ngày", total2n: "3.5–7tr", total4n: "9–16tr" },
+              packing: ["Đồ bơi + phao bơi", "Váy hoa / trang phục resort màu sắc", "Kem chống nắng SPF70+", "Dép xỏ ngón"],
+              avoid: "Cuối tháng 6 bắt đầu có mưa nhiều – ưu tiên đi trước 20/6"
+            },
+            {
+              emoji: "🏖️", destination: "Nha Trang – Hè Biển", province: "Khánh Hòa",
+              tag: "Tour Đảo & San Hô", tagColor: "#87CEEB",
+              weather: "Nắng nóng 28–34°C, biển đẹp nhất trong năm, sóng vừa",
+              highlight: "Tháng 6 Nha Trang đỉnh điểm mùa hè biển – nước trong, sóng lý tưởng. Tour 4 đảo (Hòn Mun, Hòn Tằm, Hòn Một, Hòn Miễu) là trải nghiệm biển đảo phải làm khi đến Nha Trang.",
+              mustSee: ["Tour 4 đảo – Hòn Mun lặn san hô", "Hòn Tằm resort đảo", "Tháp Bà Ponagar Chăm Pa", "Bãi biển Trần Phú 6km", "Vinpearl & Cable Car"],
+              food: ["Bún cá Nha Trang", "Nem nướng Ninh Hòa", "Bánh căn tôm mực", "Hải sản Hòn Mun", "Bánh mì ốp la Nha Trang"],
+              cafes: ["Sailing Club Rooftop view vịnh", "Ana Marina Cafe", "Lanterns Restaurant Bar", "Le Petit Bistro"],
+              photoTips: "Tour đảo chụp underwater – thuê máy ảnh chống nước tại bến tàu. Tháp Bà 7:00–9:00 sáng ánh vàng.",
+              sunrise: "Bãi biển Trần Phú – toàn cảnh vịnh Nha Trang", sunset: "Vinpearl hoặc đầm Nha Phu nhìn về tây",
+              minDays: "2N1Đ", idealDays: "4N3Đ",
+              itinerary: {
+                "2N1Đ": ["Sáng: Tháp Bà + biển Trần Phú", "Chiều: Tour Hòn Mun snorkeling", "Tối: Phố biển + hải sản"],
+                "3N2Đ": ["Ngày 1: Tháp Bà + Chùa Long Sơn + phố biển", "Ngày 2: Tour 4 đảo cả ngày", "Ngày 3: Hòn Tằm nghỉ dưỡng + về"],
+                "4N3Đ": ["Ngày 1: Đến + phố biển + hải sản", "Ngày 2: Tháp Bà + Viện Hải Dương + Chùa Long Sơn", "Ngày 3: Tour 4 đảo", "Ngày 4: Hòn Tằm + Vinpearl + về"]
+              },
+              budget: { flight: "700K–1.4tr", hotel: "600K–1.5tr/đêm", food: "350–600K/ngày", transport: "200–400K/ngày", total2n: "3.5–6tr", total4n: "8–13tr" },
+              packing: ["Đồ bơi + kính lặn", "Áo rash guard chống sứa", "Kem chống nắng SPF50+", "Sandal chống trơn"],
+              avoid: "Tháng 6 cao điểm – đặt tour đảo trước vì hay hết chỗ"
+            },
+            {
+              emoji: "🌊", destination: "Cù Lao Chàm – Đảo Di Sản", province: "Quảng Nam (gần Hội An)",
+              tag: "Biosphere & San Hô", tagColor: "#98D8C8",
+              weather: "Nắng đẹp 28–32°C, biển lặng – đỉnh điểm mùa đảo",
+              highlight: "Tháng 6 là tháng đẹp nhất Cù Lao Chàm – biển yên, không sóng lớn. Đảo Dự trữ Sinh Quyển Thế giới cách Hội An 23km, cano 20 phút. San hô bảo tồn tốt nhất miền Trung.",
+              mustSee: ["Bãi Bấc – snorkeling san hô đẹp nhất", "Bãi Ông – tắm biển vắng", "Làng chài đảo Hòn Lao", "Chùa Hải Tạng cổ", "Bãi Làng – xem hoàng hôn"],
+              food: ["Hải sản đảo tươi – mực ghẹ cua", "Cơm cụm – cơm nắm truyền thống", "Cá cơm nướng", "Rau câu tươi", "Ốc Cù Lao Chàm"],
+              cafes: ["Quán ven biển đảo Hòn Lao", "Homestay cafe Cù Lao Chàm"],
+              photoTips: "Cano ra đảo 7:00 sáng. Bãi Bấc chụp underwater – thuê đồ lặn tại đảo. Hoàng hôn Bãi Làng 17:30.",
+              sunrise: "Đỉnh đảo Hòn Lao – toàn cảnh quần đảo", sunset: "Bãi Làng – nhìn về Hội An",
+              minDays: "1N0Đ (day trip)", idealDays: "2N1Đ (ngủ đảo)",
+              itinerary: {
+                "2N1Đ": ["Ngày 1: Sáng cano ra đảo – Bãi Bấc snorkeling – Bãi Ông tắm biển – đêm ngủ đảo", "Ngày 2: Sáng đảo vắng chụp ảnh – cano về Hội An trưa"],
+                "3N2Đ": ["Ngày 1: Hội An phố cổ", "Ngày 2: Cù Lao Chàm nguyên ngày (cano 7h – về 17h)", "Ngày 3: Mỹ Sơn hoặc Đà Nẵng + về"],
+                "4N3Đ": ["Ngày 1: Hội An phố cổ + đêm lồng đèn", "Ngày 2–3: Cù Lao Chàm 2 ngày ngủ đảo", "Ngày 4: Hội An mua sắm + về"]
+              },
+              budget: { flight: "Bay đến Đà Nẵng: 800K–1.5tr", hotel: "Homestay đảo: 300–600K/đêm", food: "300–500K/ngày", transport: "Cano Hội An – đảo: 250K khứ hồi", total2n: "2.5–5tr", total4n: "5.5–10tr" },
+              packing: ["Đồ bơi + kính lặn + ống thở", "Tiền mặt – đảo không ATM", "Giày biển chống trơn", "Kem chống nắng SPF70+"],
+              avoid: "Tháng 9–12 biển Cù Lao Chàm động – chỉ đi tháng 3–8"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      id: "q3", name: "QUÝ 3", months: "Tháng 7 – 9",
+      bgGradient: "linear-gradient(135deg, #EDFAF5 0%, #D4F0E8 100%)",
+      accentColor: "#2E8B6E",
+      destinations: [
+        {
+          month: "Tháng 7",
+          spots: [
+            {
+              emoji: "🏔️", destination: "Đà Lạt – Mưa & Thác", province: "Lâm Đồng",
+              tag: "Thác Mùa Mưa & Rừng Xanh", tagColor: "#90EE90",
+              weather: "Mưa chiều, sáng nắng đẹp, 15–22°C – mát lạnh",
+              highlight: "Đà Lạt mùa mưa tháng 7 là trải nghiệm hoàn toàn khác – thác Prenn, thác Datanla đổ nước mạnh nhất năm. Rừng thông sau mưa xanh mướt, sương mù lãng đãng như cổ tích.",
+              mustSee: ["Thác Prenn mùa nước lớn", "Thác Datanla", "Đồi chè Cầu Đất sáng sớm", "Làng Cù Lần", "Ga Đà Lạt cổ kính"],
+              food: ["Lẩu nấm rừng Đà Lạt", "Bánh căn", "Kem bơ", "Xôi cốm dẹp", "Bánh mì thanh long"],
+              cafes: ["Mê Linh Coffee Garden view đồi chè", "The Married Beans", "Retreat Coffee thiết kế độc", "D'art Café"],
+              photoTips: "Đồi chè Cầu Đất 7:00–9:00 sáng có sương mù. Thác chụp sau mưa chiều 16:00–17:00 nước to nhất.",
+              sunrise: "Đồi chè Cầu Đất – mây phủ như tiên cảnh", sunset: "Đồi Robin – cả thành phố trong ánh chiều",
+              minDays: "2N1Đ", idealDays: "3N2Đ",
+              itinerary: {
+                "2N1Đ": ["Sáng: Đồi chè Cầu Đất sương mù", "Chiều: Thác Datanla + Prenn", "Tối: Phố ẩm thực + chợ đêm"],
+                "3N2Đ": ["Ngày 1: Đến + Ga Đà Lạt + Hồ Xuân Hương + chợ đêm", "Ngày 2: Cầu Đất sáng sớm + thác chiều", "Ngày 3: Làng Cù Lần + về"],
+                "4N3Đ": ["Ngày 1: Đến + cafe + chợ đêm", "Ngày 2: Cầu Đất sáng sớm + thác chiều", "Ngày 3: Làng Cù Lần / Madagui", "Ngày 4: Thung lũng Vàng + về"]
+              },
+              budget: { flight: "500K–1tr (off-peak)", hotel: "400K–900K/đêm", food: "200–400K/ngày", transport: "150–300K/ngày", total2n: "2–3.5tr", total4n: "4.5–7tr" },
+              packing: ["Áo khoác chống thấm", "Ủng hoặc giày chống trơn", "Áo layer", "Màu nâu / xanh rêu / beige hợp rừng thông"],
+              avoid: "Tránh đi thứ 7 CN vì đông người HCM lên"
+            },
+            {
+              emoji: "🌊", destination: "Quy Nhơn – Mùa Hè", province: "Bình Định",
+              tag: "Kỳ Co & Eo Gió Mùa Hè", tagColor: "#87CEEB",
+              weather: "Nắng nóng 28–34°C, biển đẹp nhất – mùa cao điểm",
+              highlight: "Tháng 7 Quy Nhơn vào mùa hè đẹp nhất – Kỳ Co và Eo Gió tạo nên vẻ đẹp không thể bỏ lỡ. Biển xanh ngọc bích, sóng vừa. Vẫn chưa đông bằng Đà Nẵng – điểm cộng lớn.",
+              mustSee: ["Bãi Kỳ Co xanh ngọc", "Eo Gió – vách đá biển", "Ghềnh Ráng Tiên Sa", "Hầm Hô cảnh quan", "Tháp Bánh Ít Chăm Pa"],
+              food: ["Bánh xèo tôm nhảy", "Bún chả cá", "Chả cua Ghềnh Ráng", "Cua huỳnh đế hấp bia", "Bún sứa"],
+              cafes: ["Cafe Nở view biển", "Cafe Tối Quy Nhơn", "The Workshop QN", "Clouds Cafe"],
+              photoTips: "Kỳ Co chụp 7:00–10:00 sáng nước xanh nhất. Eo Gió 16:30 chiều nắng vàng đổ vách đá.",
+              sunrise: "Ghềnh Ráng Tiên Sa", sunset: "Eo Gió – hoàng hôn trên vách đá",
+              minDays: "2N1Đ", idealDays: "3N2Đ",
+              itinerary: {
+                "2N1Đ": ["Sáng: Kỳ Co tắm biển", "Chiều: Eo Gió hoàng hôn", "Tối: Hải sản Quy Nhơn"],
+                "3N2Đ": ["Ngày 1: Đến + Ghềnh Ráng + hải sản", "Ngày 2: Kỳ Co sáng + Eo Gió chiều", "Ngày 3: Tháp Bánh Ít + Tháp Đôi + về"],
+                "4N3Đ": ["Ngày 1: Đến + Ghềnh Ráng", "Ngày 2: Kỳ Co cả ngày", "Ngày 3: Eo Gió + Đảo Lý Sơn day trip", "Ngày 4: Tháp Chăm + về"]
+              },
+              budget: { flight: "700K–1.3tr", hotel: "500K–1tr/đêm", food: "250–450K/ngày", transport: "200–350K/ngày", total2n: "3–5tr", total4n: "6–10tr" },
+              packing: ["Đồ bơi + kem chống nắng SPF70+", "Giày đế bám leo đá Eo Gió", "Kính mát + nón", "Màu trắng / xanh để lên hình biển"],
+              avoid: "Tháng 7 cao điểm hè – book trước 1 tháng"
+            },
+            {
+              emoji: "🏖️", destination: "Mũi Né – Gió Biển", province: "Bình Thuận",
+              tag: "Đồi Cát & Gió Mạnh", tagColor: "#DEB887",
+              weather: "Nắng nóng 30–36°C, gió mạnh nhất năm – đặc sản Mũi Né",
+              highlight: "Tháng 7 gió Mũi Né mạnh nhất – thiên đường kitesurfing. Đồi cát đỏ nắng rực rỡ, suối Tiên trong vắt. Chỉ 4–5 tiếng xe từ HCM, rất phù hợp chuyến đi cuối tuần dài.",
+              mustSee: ["Đồi cát đỏ sunrise cực đẹp", "Suối Tiên suối đỏ cam", "Đồi cát trắng", "Bãi biển Mũi Né dài", "Làng chài bình minh sớm"],
+              food: ["Hải sản tươi làng chài", "Bánh canh chả cá", "Thanh long Bình Thuận", "Gỏi cuốn Phan Thiết", "Nước mắm Phan Thiết"],
+              cafes: ["Drift Café", "The Hammock Cafe", "Chez Leon bãi biển"],
+              photoTips: "Đồi cát đỏ 5:30 sáng để bắt ánh bình minh. Gió mạnh – giữ chắc thiết bị máy ảnh.",
+              sunrise: "Đồi cát đỏ – màu đất son rực rỡ", sunset: "Bãi biển Đồi Dương nhìn về tây",
+              minDays: "2N1Đ", idealDays: "3N2Đ",
+              itinerary: {
+                "2N1Đ": ["5:30 sáng: Đồi cát đỏ sunrise", "Chiều: Suối Tiên + cát trắng", "Tối: Hải sản + biển đêm"],
+                "3N2Đ": ["Ngày 1: Đến chiều – biển – hải sản tối", "Ngày 2: Đồi cát đỏ sáng – Suối Tiên – cát trắng", "Ngày 3: Làng chài – Tháp Poshanư – về HCM"],
+                "4N3Đ": ["Ngày 1: Đến + resort + biển", "Ngày 2: Đồi cát đỏ + làng chài sáng", "Ngày 3: Suối Tiên + cát trắng + hải sản tối", "Ngày 4: Tháp Poshanư + về"]
+              },
+              budget: { flight: "Xe khách HCM: 200–300K", hotel: "600K–1.8tr/đêm resort hè", food: "300–550K/ngày", transport: "100–250K/ngày", total2n: "2–4.5tr", total4n: "5–10tr" },
+              packing: ["Kính mát chống cát", "Khăn trùm đầu", "Kem chống nắng SPF70+", "Màu trắng / be / cam để lên hình đồi cát"],
+              avoid: "Gió tháng 7 rất mạnh – không phù hợp bơi xa bờ nhưng đồi cát cực đẹp"
+            }
+          ]
+        },
+        {
+          month: "Tháng 8",
+          spots: [
+            {
+              emoji: "🦀", destination: "Côn Đảo – Mùa Rùa", province: "Bà Rịa – Vũng Tàu",
+              tag: "Tour Canh Rùa Biển Độc Đáo", tagColor: "#87CEEB",
+              weather: "Nắng đẹp 28–33°C, biển trong vắt, mùa rùa đẻ trứng",
+              highlight: "Tháng 8 Côn Đảo đặc biệt: rùa biển lên đẻ trứng mỗi đêm tại Bãi Đầm Trầu – tour canh rùa là trải nghiệm thiên nhiên đặc sắc nhất Việt Nam. Biển trong như thủy tinh.",
+              mustSee: ["Bãi Đầm Trầu – tour canh rùa đêm", "Nghĩa trang Hàng Dương tâm linh", "Vườn quốc gia Côn Đảo", "Bãi An Hải tắm biển", "Hòn Bảy Cạnh snorkeling"],
+              food: ["Hải sản Côn Đảo tươi", "Bún bà Hai", "Sò điệp nướng mỡ hành", "Bánh mì cô Loan", "Ghẹ hấp"],
+              cafes: ["Six Senses Bar", "ATC Hotel Pool Bar", "Cafe ven biển Bến Đầm"],
+              photoTips: "Bãi Đầm Trầu chụp 5:30 sáng tím hồng. Hàng Dương chụp nến tâm linh buổi tối.",
+              sunrise: "Bãi Đầm Trầu – mặt trời mọc từ biển", sunset: "Bãi Nhát hoặc đỉnh núi Chúa",
+              minDays: "2N1Đ", idealDays: "3N2Đ",
+              itinerary: {
+                "2N1Đ": ["Sáng: Bãi An Hải", "Chiều: Vườn QG + Hàng Dương", "Đêm: Tour canh rùa Bãi Đầm Trầu"],
+                "3N2Đ": ["Ngày 1: Đến + Bãi An Hải + hải sản", "Ngày 2: Tour Hòn Bảy Cạnh snorkeling", "Đêm 2: Canh rùa Bãi Đầm Trầu"],
+                "4N3Đ": ["Ngày 1: Đến + biển chiều + hải sản", "Ngày 2: Hòn Bảy Cạnh lặn san hô", "Ngày 3: Vườn QG + Hàng Dương + đêm canh rùa", "Ngày 4: Bãi Đầm Trầu bình minh + về"]
+              },
+              budget: { flight: "1–2tr (ít hãng)", hotel: "600K–2tr/đêm", food: "400–700K/ngày", transport: "200–350K/ngày", total2n: "4–7tr", total4n: "8–14tr" },
+              packing: ["Đèn pin – canh rùa đêm", "Đồ bơi + kính lặn", "Áo chống UV", "Set trắng / xanh navy để lên hình biển trong"],
+              avoid: "Đặt trước 3 tháng – Côn Đảo ít phòng hết rất nhanh"
+            },
+            {
+              emoji: "🌊", destination: "Nha Trang – Đỉnh Hè", province: "Khánh Hòa",
+              tag: "Vịnh Biển Rực Rỡ", tagColor: "#98D8C8",
+              weather: "Nắng đẹp 28–34°C, biển đẹp ổn định",
+              highlight: "Tháng 8 Nha Trang ở đỉnh điểm mùa hè. Hòn Tằm nghỉ dưỡng trên đảo tư nhân là trải nghiệm cao cấp nhất. Kết hợp lặn Hòn Mun và ẩm thực biển đêm.",
+              mustSee: ["Hòn Tằm resort đảo tư nhân", "Hòn Mun snorkeling san hô", "Tháp Bà Ponagar", "Bãi Dài Cam Ranh hoang sơ", "Chùa Long Sơn Phật trắng"],
+              food: ["Hải sản đêm phố biển", "Nem nướng Ninh Hòa", "Bún cá Nha Trang", "Bánh căn tôm mực", "Chả cá chiên"],
+              cafes: ["Sailing Club Rooftop", "Ana Marina Cafe", "Le Petit Bistro", "Mojzo Inn cafe"],
+              photoTips: "Hòn Tằm resort chụp trong ngày – nắng đẹp cả ngày. Tháp Bà 7:00–9:00 sáng ánh vàng.",
+              sunrise: "Bãi Dài Cam Ranh – vắng và hoang sơ", sunset: "Đầm Nha Phu nhìn về tây",
+              minDays: "2N1Đ", idealDays: "4N3Đ",
+              itinerary: {
+                "2N1Đ": ["Sáng: Tháp Bà + biển Trần Phú", "Chiều: Tour Hòn Mun snorkeling", "Tối: Phố biển hải sản"],
+                "3N2Đ": ["Ngày 1: Tháp Bà + Chùa Long Sơn + phố biển", "Ngày 2: Hòn Tằm nghỉ dưỡng cả ngày", "Ngày 3: Hòn Mun snorkeling + về"],
+                "4N3Đ": ["Ngày 1: Đến + phố biển + hải sản", "Ngày 2: Tháp Bà + Chùa Long Sơn + Viện Hải Dương", "Ngày 3: Hòn Tằm nguyên ngày", "Ngày 4: Hòn Mun + về"]
+              },
+              budget: { flight: "800K–1.5tr", hotel: "600K–1.8tr/đêm", food: "400–700K/ngày", transport: "200–400K/ngày", total2n: "4–7tr", total4n: "9–15tr" },
+              packing: ["Đồ bơi + kính lặn + ống thở", "Áo rash guard", "Kem chống nắng SPF70+", "Giày biển + sandal"],
+              avoid: "Tháng 8 đông nhất – đặt tour đảo sớm, tắc thuyền buổi trưa"
+            },
+            {
+              emoji: "🌴", destination: "Phú Quốc – Mùa Mưa Giá Tốt", province: "Kiên Giang",
+              tag: "Đảo Xanh Mát & Off-Peak", tagColor: "#90EE90",
+              weather: "Mưa xen kẽ nắng, 27–31°C, khí hậu mát hơn mùa khô",
+              highlight: "Tháng 8 Phú Quốc mùa mưa – giá phòng rẻ hơn 40%, ít khách. Buổi sáng thường nắng đẹp, mưa chiều ngắn. Grand World và Vinwonders vui hơn khi ít đông.",
+              mustSee: ["Grand World Phú Quốc buổi tối", "VinWonders Phú Quốc", "Bãi Sao buổi sáng sớm", "Làng chài Rạch Vẹm bình minh", "Nhà tù Phú Quốc – lịch sử"],
+              food: ["Ghẹ Phú Quốc", "Bún quậy", "Gỏi cá trích", "Nước mắm Phú Quốc nguyên chất", "Nhum nướng"],
+              cafes: ["Cafe del Mar", "Ong & Anh Sunset Bar", "The Chill Sky Bar", "Mango Bay"],
+              photoTips: "Sáng sớm trước 8h nắng đẹp nhất. Bãi Sao vắng hơn mùa khô. Grand World tối đèn lung linh ít người.",
+              sunrise: "Bãi Ông Lăng – vắng và nguyên sơ", sunset: "Bãi Tây nếu trời không mưa chiều",
+              minDays: "2N1Đ", idealDays: "3N2Đ",
+              itinerary: {
+                "2N1Đ": ["Sáng: Bãi Sao nắng sớm", "Chiều: Grand World khám phá", "Tối: Grand World đêm + hải sản"],
+                "3N2Đ": ["Ngày 1: Bãi Sao sáng + Grand World tối", "Ngày 2: VinWonders cả ngày", "Ngày 3: Làng chài Rạch Vẹm + về"],
+                "4N3Đ": ["Ngày 1: Đến + Bãi Sao sáng", "Ngày 2: Grand World + Vinwonders", "Ngày 3: Rạch Vẹm sáng + Nhà tù + chợ đêm", "Ngày 4: Bãi Sao + về"]
+              },
+              budget: { flight: "600K–1.2tr (off-peak)", hotel: "500K–1.3tr/đêm", food: "350–700K/ngày", transport: "200–400K/ngày", total2n: "3–5.5tr", total4n: "7–12tr" },
+              packing: ["Áo mưa nhỏ gọn", "Đồ bơi cho sáng nắng", "Giày thể thao (trơn khi mưa)", "Trang phục nhẹ nhiệt đới"],
+              avoid: "Biển tây có thể sóng mùa mưa – hỏi resort trước khi ra bãi"
+            }
+          ]
+        },
+        {
+          month: "Tháng 9",
+          spots: [
+            {
+              emoji: "🌾", destination: "Mũi Né – Sa Mạc Mùa Thu", province: "Bình Thuận",
+              tag: "Đồi Cát & Làng Chài Bình Minh", tagColor: "#DEB887",
+              weather: "Nắng nhiều 28–34°C, gió biển mát – thời tiết dễ chịu",
+              highlight: "Tháng 9 Mũi Né trời trong xanh, không khí dễ chịu. Đồi cát đỏ chuyển màu đặc biệt. Làng chài họp chợ thuyền bình minh cực kỳ đẹp. Gần HCM – lý tưởng cuối tuần.",
+              mustSee: ["Đồi cát đỏ sunrise", "Đồi cát trắng", "Suối Tiên suối đỏ cam", "Làng chài bình minh", "Tháp Chăm Poshanư"],
+              food: ["Bánh canh chả cá", "Gỏi cuốn Phan Thiết", "Hải sản làng chài", "Thanh long Bình Thuận", "Nước mắm Phan Thiết"],
+              cafes: ["Drift Café Mũi Né", "The Hammock Cafe", "Chez Leon bãi biển"],
+              photoTips: "Đồi cát đỏ 5:30–7:00 sáng. Làng chài 5:00–7:00 sáng thuyền thúng cực đẹp.",
+              sunrise: "Đồi cát đỏ Mũi Né", sunset: "Bãi biển Đồi Dương / resort ven biển",
+              minDays: "2N1Đ", idealDays: "3N2Đ",
+              itinerary: {
+                "2N1Đ": ["5:30 sáng: Đồi cát đỏ + làng chài", "Chiều: Suối Tiên + cát trắng", "Tối: Hải sản ven biển"],
+                "3N2Đ": ["Ngày 1: Đến chiều – biển – hải sản tối", "Ngày 2: Đồi cát đỏ sáng – Suối Tiên – cát trắng", "Ngày 3: Làng chài – Tháp Poshanư – về"],
+                "4N3Đ": ["Ngày 1: Đến + resort + biển", "Ngày 2: Đồi cát đỏ + làng chài sáng", "Ngày 3: Suối Tiên + cát trắng tối", "Ngày 4: Tháp Poshanư + mua sắm + về"]
+              },
+              budget: { flight: "Xe khách HCM: 200–300K khứ hồi", hotel: "500K–1.5tr/đêm resort", food: "250–450K/ngày", transport: "100–250K/ngày", total2n: "1.5–3.5tr", total4n: "4–8tr" },
+              packing: ["Kính mát chống cát", "Khăn trùm đầu", "Dép + giày thể thao", "Màu nâu đất / be / trắng cho đồi cát"],
+              avoid: "Tháng 9 bắt đầu mùa kitesurfing – chú ý khu vực ván lướt khi tắm"
+            },
+            {
+              emoji: "🌸", destination: "Đà Lạt – Hoa Dã Quỳ Sớm", province: "Lâm Đồng",
+              tag: "Hoa Đầu Mùa & Rừng Xanh", tagColor: "#FFD700",
+              weather: "Mát lạnh 16–22°C, mưa ít dần, hoa dã quỳ bắt đầu nở cuối tháng",
+              highlight: "Cuối tháng 9 hoa dã quỳ Đà Lạt bắt đầu nở sớm. Ít người biết nên rất vắng, giá rẻ hơn tháng 10–11. Rừng thông sau mùa mưa cực xanh, cảnh quan tươi mát.",
+              mustSee: ["Đồi dã quỳ ven đường lên Lang Biang", "Đồi chè Cầu Đất (xanh nhất sau mưa)", "Hồ Xuân Hương", "Ga Đà Lạt + nhà thờ cổ", "Vườn hoa thành phố"],
+              food: ["Bánh tráng nướng Đà Lạt", "Nem nướng", "Kem bơ", "Cá hồi Đà Lạt", "Atisô hầm gà"],
+              cafes: ["Mê Linh Coffee Garden", "The Married Beans", "Là Việt Coffee", "Gió và Nước"],
+              photoTips: "Cuối tháng 9 hoa dã quỳ còn thưa – chụp cận cảnh đẹp hơn toàn cảnh. Sáng sớm sương mù vẫn đẹp.",
+              sunrise: "Đồi chè Cầu Đất – sương mù sau mưa đặc biệt", sunset: "Đồi Robin nhìn thành phố",
+              minDays: "2N1Đ", idealDays: "3N2Đ",
+              itinerary: {
+                "2N1Đ": ["Sáng: Cầu Đất sương mù + dã quỳ", "Chiều: Hồ Xuân Hương + Vườn hoa", "Tối: Chợ đêm"],
+                "3N2Đ": ["Ngày 1: Đến + Ga cổ + Hồ Xuân Hương + chợ đêm", "Ngày 2: Cầu Đất sáng sớm + dã quỳ Lang Biang chiều", "Ngày 3: Vườn hoa + về"],
+                "4N3Đ": ["Ngày 1: Đến + dạo phố + cafe", "Ngày 2: Cầu Đất + dã quỳ", "Ngày 3: Lang Biang + Thung lũng Tình Yêu", "Ngày 4: Vườn hoa + về"]
+              },
+              budget: { flight: "500K–900K (thấp điểm)", hotel: "350K–900K/đêm", food: "200–380K/ngày", transport: "150–280K/ngày", total2n: "1.8–3.5tr", total4n: "4–7tr" },
+              packing: ["Áo khoác nhẹ", "Giày đi bộ", "Màu vàng / cam để lên hình cùng hoa dã quỳ"],
+              avoid: "Đầu tháng 9 còn mưa – cuối tháng (sau 20/9) đẹp hơn"
+            },
+            {
+              emoji: "🏯", destination: "Phú Yên – Xứ Hoang Sơ", province: "Phú Yên",
+              tag: "Bình Minh & Ghềnh Đá Đĩa", tagColor: "#B0E0E6",
+              weather: "Nắng đẹp 26–31°C, tháng 9 ít mưa, biển tốt",
+              highlight: "Tháng 9 Phú Yên đẹp trước mùa mưa. Ghềnh Đá Đĩa – kỳ quan địa chất với hàng nghìn cột đá bazan lục giác đẹp nhất lúc bình minh. Mũi Điện nơi đón bình minh sớm nhất Việt Nam là trải nghiệm độc nhất.",
+              mustSee: ["Ghềnh Đá Đĩa – di tích quốc gia", "Mũi Điện – bình minh sớm nhất VN", "Bãi Xép – phim Hoa Vàng Cỏ Xanh", "Vịnh Vũng Rô hoang sơ", "Quảng trường Nghinh Phong"],
+              food: ["Bánh canh chả cá Phú Yên", "Cá ngừ đại dương", "Sò huyết Phú Yên", "Bún sứa", "Gỏi cá mai"],
+              cafes: ["Cafe view biển Tuy Hòa", "Quảng trường Nghinh Phong khu cafe", "Nhà hàng ven Vũng Rô"],
+              photoTips: "Ghềnh Đá Đĩa chụp 5:30–7:00 sáng ánh sáng vàng xuyên đá. Mũi Điện lên trước 5:00 sáng để xem bình minh sớm nhất.",
+              sunrise: "Mũi Điện – sớm nhất Việt Nam 5:20 sáng", sunset: "Quảng trường Nghinh Phong ven biển Tuy Hòa",
+              minDays: "2N1Đ", idealDays: "3N2Đ",
+              itinerary: {
+                "2N1Đ": ["Sáng: Ghềnh Đá Đĩa bình minh", "Chiều: Bãi Xép + Quảng trường", "Tối: Ẩm thực Tuy Hòa"],
+                "3N2Đ": ["Ngày 1: Bay đến – Ghềnh Đá Đĩa – Bãi Xép", "Ngày 2: Mũi Điện bình minh sớm – Vũng Rô chiều", "Ngày 3: Quảng trường + về"],
+                "4N3Đ": ["Ngày 1: Đến + Ghềnh Đá Đĩa + Bãi Xép", "Ngày 2: Mũi Điện bình minh + Vũng Rô", "Ngày 3: Hồ Xuân Đài + làng biển Phú Yên", "Ngày 4: Quảng trường + về"]
+              },
+              budget: { flight: "700K–1.2tr (đến Tuy Hòa)", hotel: "400K–900K/đêm", food: "250–450K/ngày", transport: "200–350K/ngày", total2n: "2.5–4.5tr", total4n: "5.5–9tr" },
+              packing: ["Đèn pin – Mũi Điện lên 4:30 sáng", "Giày đế bám", "Kem chống nắng SPF50+", "Máy ảnh + tripod cho bình minh"],
+              avoid: "Tháng 10–11 Phú Yên mưa lũ – tháng 9 là cửa sổ cuối đẹp nhất"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      id: "q4", name: "QUÝ 4", months: "Tháng 10 – 12",
+      bgGradient: "linear-gradient(135deg, #F5F0FA 0%, #EBE0F5 100%)",
+      accentColor: "#7B5EA7",
+      destinations: [
+        {
+          month: "Tháng 10",
+          spots: [
+            {
+              emoji: "🎋", destination: "Đà Lạt – Hoa Dã Quỳ", province: "Lâm Đồng",
+              tag: "Hoa Dã Quỳ Vàng Rực Rỡ", tagColor: "#FFD700",
+              weather: "Mát lạnh 15–20°C, cuối tháng hoa dã quỳ nở rộ nhất",
+              highlight: "Tháng 10–11 Đà Lạt có hoa dã quỳ vàng nở rộ – đặc biệt ven đường và chân núi Lang Biang. Đây là mùa đẹp nhất năm theo các tín đồ nhiếp ảnh.",
+              mustSee: ["Đồi hoa dã quỳ Lang Biang", "Suối Vàng hoa quỳ ven hồ", "Đồi Vạn Thành hoa vàng", "Vườn hoa thành phố", "Ga Đà Lạt cổ"],
+              food: ["Bánh tráng nướng", "Nem nướng", "Cá hồi Đà Lạt", "Atisô hầm gà", "Rượu vang Đà Lạt"],
+              cafes: ["The Married Beans", "Gió và Nước", "Cafe Rang Đà Lạt", "Mộc Cafe"],
+              photoTips: "Hoa dã quỳ đẹp nhất buổi sáng có nắng. Đi xe máy đường lên Lang Biang tìm cánh đồng vắng.",
+              sunrise: "Đỉnh Lang Biang – toàn cảnh Đà Lạt", sunset: "Hồ Suối Vàng phản chiếu màu vàng hoa",
+              minDays: "2N1Đ", idealDays: "3N2Đ",
+              itinerary: {
+                "2N1Đ": ["Sáng: Đồi hoa dã quỳ Lang Biang + Suối Vàng", "Chiều: Vườn hoa + Thung lũng Tình Yêu", "Tối: Chợ đêm"],
+                "3N2Đ": ["Ngày 1: Đến + dạo phố + chợ đêm", "Ngày 2: Dã quỳ Lang Biang + Suối Vàng sáng", "Ngày 3: Vườn hoa thành phố + về"],
+                "4N3Đ": ["Ngày 1: Đến + Hồ Xuân Hương", "Ngày 2: Lang Biang sáng + Suối Vàng chiều", "Ngày 3: Đồi Vạn Thành + cafe + chợ đêm", "Ngày 4: Cầu Đất đồi chè + về"]
+              },
+              budget: { flight: "500K–1tr", hotel: "400K–1tr/đêm", food: "200–400K/ngày", transport: "150–300K/ngày", total2n: "2–3.5tr", total4n: "4.5–7.5tr" },
+              packing: ["Áo khoác dày", "Giày đế bám (đồi có thể trơn)", "Màu vàng / đỏ / trắng để lên hình cùng hoa dã quỳ"],
+              avoid: "Đặt phòng trước – tháng 10 mùa đẹp nên khách đông bất ngờ"
+            },
+            {
+              emoji: "🏖️", destination: "Mũi Né – Mùa Thu Dịu", province: "Bình Thuận",
+              tag: "Đồi Cát Thu & Ít Người", tagColor: "#DEB887",
+              weather: "Nắng đẹp 27–32°C, gió mát – thời tiết dễ chịu nhất năm",
+              highlight: "Tháng 10 Mũi Né gió mát, trời trong xanh, đồi cát ít người hơn mùa hè. Tháng lý tưởng cho ảnh đồi cát không có dấu chân người, không bị ánh nắng gắt.",
+              mustSee: ["Đồi cát đỏ ít người hơn hè", "Đồi cát trắng", "Suối Tiên", "Làng chài bình minh", "Tháp Chăm Poshanư"],
+              food: ["Hải sản làng chài", "Bánh canh chả cá", "Gỏi cuốn Phan Thiết", "Thanh long Bình Thuận"],
+              cafes: ["Drift Café", "The Hammock Cafe", "Chez Leon bãi biển"],
+              photoTips: "Đồi cát đỏ tháng 10 nắng dịu – có thể chụp đến 8:30–9:00 mà ảnh vẫn đẹp. Không bị ánh sáng gắt như hè.",
+              sunrise: "Đồi cát đỏ Mũi Né", sunset: "Bãi biển ven resort",
+              minDays: "2N1Đ", idealDays: "3N2Đ",
+              itinerary: {
+                "2N1Đ": ["Sáng: Đồi cát đỏ + làng chài", "Chiều: Suối Tiên + cát trắng", "Tối: Hải sản"],
+                "3N2Đ": ["Ngày 1: Đến chiều + hải sản tối", "Ngày 2: Đồi cát đỏ sáng + Suối Tiên chiều", "Ngày 3: Cát trắng + Poshanư + về"],
+                "4N3Đ": ["Ngày 1: Đến + biển + resort", "Ngày 2: Đồi cát đỏ + làng chài sáng", "Ngày 3: Suối Tiên + cát trắng", "Ngày 4: Poshanư + về"]
+              },
+              budget: { flight: "Xe khách HCM: 200–300K", hotel: "400K–1.2tr/đêm", food: "250–450K/ngày", transport: "100–250K/ngày", total2n: "1.5–3tr", total4n: "3.5–7tr" },
+              packing: ["Kem chống nắng SPF50+", "Kính mát", "Đồ nhẹ", "Màu nâu đất / be rất hợp đồi cát"],
+              avoid: "Tháng 10 ít đông, giá tốt – thời điểm lý tưởng đi Mũi Né"
+            },
+            {
+              emoji: "🌊", destination: "Quy Nhơn – Mùa Thu Yên Bình", province: "Bình Định",
+              tag: "Biển Thu & Di Sản Chăm", tagColor: "#B0E0E6",
+              weather: "Nắng đẹp 26–30°C, biển lặng, ít khách – lý tưởng khám phá",
+              highlight: "Tháng 10 Quy Nhơn yên bình và đẹp – trời mát hơn hè, biển ít sóng, không đông. Kết hợp Eo Gió và Kỳ Co với di sản Chăm Pa tạo hành trình văn hóa – thiên nhiên hoàn hảo.",
+              mustSee: ["Eo Gió yên bình mùa thu", "Kỳ Co nước xanh", "Tháp Đôi + Tháp Bánh Ít Chăm Pa", "Ghềnh Ráng Tiên Sa", "Đảo Lý Sơn day trip cuối mùa"],
+              food: ["Bún chả cá", "Bánh xèo tôm nhảy Quy Nhơn", "Cua huỳnh đế", "Chả cua Ghềnh Ráng", "Nem chả Bình Định"],
+              cafes: ["Cafe Nở view biển", "The Workshop QN", "Cafe Tối Quy Nhơn"],
+              photoTips: "Tháng 10 ánh sáng dịu, golden hour dài hơn hè. Eo Gió tháng 10 gió vừa phải, chụp dễ hơn.",
+              sunrise: "Ghềnh Ráng Tiên Sa", sunset: "Eo Gió nhìn ra biển tây",
+              minDays: "2N1Đ", idealDays: "3N2Đ",
+              itinerary: {
+                "2N1Đ": ["Sáng: Kỳ Co + Eo Gió", "Chiều: Tháp Đôi + Ghềnh Ráng", "Tối: Hải sản"],
+                "3N2Đ": ["Ngày 1: Đến + Ghềnh Ráng + hải sản", "Ngày 2: Kỳ Co sáng + Eo Gió chiều", "Ngày 3: Tháp Bánh Ít + Tháp Đôi + về"],
+                "4N3Đ": ["Ngày 1: Đến + Ghềnh Ráng", "Ngày 2: Kỳ Co + Eo Gió", "Ngày 3: Đảo Lý Sơn day trip", "Ngày 4: Biển sáng + về"]
+              },
+              budget: { flight: "600K–1.1tr", hotel: "400K–900K/đêm", food: "200–400K/ngày", transport: "200–350K/ngày", total2n: "2.5–4tr", total4n: "5–8.5tr" },
+              packing: ["Kem chống nắng SPF50+", "Giày đế bám leo Eo Gió", "Áo khoác nhẹ buổi tối", "Màu trắng / xanh để lên hình biển"],
+              avoid: "Cuối tháng 10 đầu tháng 11 bắt đầu mưa miền Trung – kiểm tra thời tiết"
+            }
+          ]
+        },
+        {
+          month: "Tháng 11",
+          spots: [
+            {
+              emoji: "🏝️", destination: "Nha Trang – Mùa Vàng", province: "Khánh Hòa",
+              tag: "Vịnh Biển & Văn Hóa Chăm", tagColor: "#87CEEB",
+              weather: "Nắng đẹp 24–28°C, biển lặng – thời điểm đẹp nhất trong năm",
+              highlight: "Tháng 11–12 là đỉnh điểm đẹp nhất của Nha Trang. Không còn mưa bão, biển trong xanh, gió nhẹ. Tháp Bà Ponagar và lặn Hòn Mun tạo hành trình văn hóa – biển hoàn hảo.",
+              mustSee: ["Tháp Bà Ponagar Chăm Pa", "Hòn Mun lặn ngắm san hô", "Hòn Tằm nghỉ dưỡng đảo", "Chùa Long Sơn Phật trắng", "Bãi Dài Cam Ranh hoang sơ"],
+              food: ["Bún cá Nha Trang", "Nem nướng Ninh Hòa", "Bánh căn tôm mực", "Hải sản Hòn Mun", "Chả cá Nha Trang"],
+              cafes: ["Sailing Club Rooftop view vịnh", "Ana Marina Cafe", "Lanterns Restaurant", "Le Petit Bistro"],
+              photoTips: "Tháp Bà 7:00–9:00 sáng ánh vàng. Hòn Mun cần máy ảnh chống nước. Bãi Dài Cam Ranh rất vắng và đẹp.",
+              sunrise: "Bãi biển Trần Phú – nhìn ra vịnh Nha Trang", sunset: "Đầm Nha Phu hoặc Vinpearl",
+              minDays: "2N1Đ", idealDays: "4N3Đ",
+              itinerary: {
+                "2N1Đ": ["Sáng: Tháp Bà + Chùa Long Sơn", "Chiều: Tour Hòn Mun snorkeling", "Tối: Phố biển + hải sản"],
+                "3N2Đ": ["Ngày 1: Tháp Bà + Viện Hải Dương + phố biển", "Ngày 2: Tour 4 đảo cả ngày", "Ngày 3: Hòn Tằm nghỉ dưỡng + về"],
+                "4N3Đ": ["Ngày 1: Đến + phố biển + hải sản", "Ngày 2: Tháp Bà + Chùa Long Sơn + Viện Hải Dương", "Ngày 3: Tour 4 đảo", "Ngày 4: Bãi Dài Cam Ranh + về"]
+              },
+              budget: { flight: "700K–1.3tr", hotel: "500K–1.5tr/đêm", food: "300–600K/ngày", transport: "200–400K/ngày", total2n: "3–5.5tr", total4n: "7–12tr" },
+              packing: ["Đồ bơi + kính lặn", "Áo rash guard (tránh sứa)", "Kem chống nắng SPF50+", "Sandal chống trơn"],
+              avoid: "Tháng 11 đầu có thể còn mưa – kiểm tra thời tiết trước 3 ngày"
+            },
+            {
+              emoji: "🌴", destination: "Phú Quốc – Đầu Mùa Khô", province: "Kiên Giang",
+              tag: "Đảo Ngọc Giá Tốt", tagColor: "#98FB98",
+              weather: "Nắng đẹp 28–33°C, mưa ít dần, biển bắt đầu lặng",
+              highlight: "Tháng 11 Phú Quốc bắt đầu vào mùa khô. Giá chưa tăng cao như tháng 12. Bãi Sao và hoàng hôn bãi Tây kết hợp Grand World tạo hành trình đảo ngọc hoàn hảo.",
+              mustSee: ["Bãi Sao – top 10 biển châu Á", "Sunset Sanato Beach hoàng hôn", "Grand World Phú Quốc đêm", "Tour 3 đảo snorkeling", "Làng chài Rạch Vẹm bình minh"],
+              food: ["Ghẹ Phú Quốc", "Nhum nướng mỡ hành", "Bún quậy", "Gỏi cá trích", "Nước mắm Phú Quốc"],
+              cafes: ["Mango Bay view biển", "Cafe del Mar", "Ong & Anh Sunset Bar", "The Chill Sky Bar"],
+              photoTips: "Bãi Sao 6:00–8:00 sáng nước trong như gương. Hoàng hôn bãi Tây 17:30–18:30 – filter warm tone cực đẹp.",
+              sunrise: "Bãi Ông Lăng – vắng và nguyên sơ", sunset: "Bãi Tây (Sunset Beach) – đẹp nhất Việt Nam",
+              minDays: "2N1Đ", idealDays: "4N3Đ",
+              itinerary: {
+                "2N1Đ": ["Sáng: Bãi Sao", "Chiều: Grand World", "Tối: Hoàng hôn bãi Tây + chợ đêm"],
+                "3N2Đ": ["Ngày 1: Bãi Sao + hoàng hôn bãi Tây", "Ngày 2: Tour 3 đảo cả ngày", "Ngày 3: Grand World + về"],
+                "4N3Đ": ["Ngày 1: Bãi Sao + hoàng hôn", "Ngày 2: Tour 3 đảo", "Ngày 3: Grand World + Vinwonders", "Ngày 4: Rạch Vẹm + cáp treo Hòn Thơm + về"]
+              },
+              budget: { flight: "700K–1.5tr", hotel: "600K–1.8tr/đêm", food: "400–800K/ngày", transport: "200–400K/ngày", total2n: "3.5–6.5tr", total4n: "8.5–15tr" },
+              packing: ["Đồ bơi + phao bơi", "Váy hoa / trang phục resort", "Kem chống nắng SPF70+", "Dép xỏ ngón"],
+              avoid: "Tháng 11 giá chưa tăng như 12 – book sớm để có giá tốt trước Noel"
+            },
+            {
+              emoji: "🌸", destination: "Đà Lạt – Hoa Quỳ Đỉnh Mùa", province: "Lâm Đồng",
+              tag: "Hoa Dã Quỳ Đẹp Nhất", tagColor: "#FFD700",
+              weather: "Mát lạnh 13–18°C, ít mưa, hoa dã quỳ nở rộ nhất năm",
+              highlight: "Tháng 11 là đỉnh điểm hoa dã quỳ Đà Lạt – đồi vàng ngập tràn từ chân Lang Biang đến ven đường. Nhiều nhiếp ảnh gia coi tháng 11 là tháng đẹp nhất Đà Lạt trong năm.",
+              mustSee: ["Đồi hoa dã quỳ đường lên Lang Biang", "Suối Vàng hoa vàng ven hồ", "Đồi Vạn Thành vàng rực", "Hồ Đan Kia hoa quỳ hoang dã", "Festival Hoa Đà Lạt tháng 11–12"],
+              food: ["Lẩu nấm rừng + rượu vang nóng", "Cá hồi Đà Lạt", "Bánh tráng nướng", "Atisô hầm gà", "Nem nướng"],
+              cafes: ["Mê Linh Coffee Garden", "The Married Beans", "Retreat Coffee", "Shelter Coffee"],
+              photoTips: "Hoa dã quỳ 8:00–11:00 sáng ánh sáng đẹp nhất. Tháng 11 nhiều tuyến đường mới – thuê xe máy tự khám phá.",
+              sunrise: "Đỉnh Lang Biang toàn cảnh", sunset: "Hồ Đan Kia phản chiếu màu vàng hoa",
+              minDays: "2N1Đ", idealDays: "3N2Đ",
+              itinerary: {
+                "2N1Đ": ["Sáng: Đồi hoa dã quỳ + Suối Vàng", "Chiều: Vườn hoa + Thung lũng Tình Yêu", "Tối: Chợ đêm"],
+                "3N2Đ": ["Ngày 1: Đến + Hồ Xuân Hương + chợ đêm", "Ngày 2: Lang Biang sáng + Suối Vàng chiều", "Ngày 3: Đồi Vạn Thành + về"],
+                "4N3Đ": ["Ngày 1: Đến + cafe + chợ đêm", "Ngày 2: Lang Biang sáng + Suối Vàng", "Ngày 3: Hồ Đan Kia + Vườn hoa", "Ngày 4: Cầu Đất đồi chè + về"]
+              },
+              budget: { flight: "600K–1.2tr", hotel: "500K–1.2tr/đêm (đông hơn)", food: "250–450K/ngày", transport: "150–300K/ngày", total2n: "2.5–4.5tr", total4n: "5.5–9tr" },
+              packing: ["Áo khoác dày + áo len", "Khăn quàng cổ + găng tay nhẹ", "Giày đi bộ tốt", "Màu vàng / đỏ / trắng để lên hình hoa"],
+              avoid: "Tháng 11 đông nhất năm – đặt phòng trước 2 tháng, đặc biệt cuối tuần"
+            }
+          ]
+        },
+        {
+          month: "Tháng 12",
+          spots: [
+            {
+              emoji: "🎄", destination: "Đà Lạt – Giáng Sinh", province: "Lâm Đồng",
+              tag: "Noel Lãng Mạn Như Châu Âu", tagColor: "#90EE90",
+              weather: "Lạnh nhất năm 12–18°C, se lạnh lãng mạn",
+              highlight: "Tháng 12 Đà Lạt trang trí Giáng Sinh cực lung linh – quảng trường Lâm Viên, khu Hòa Bình và các cafe thi nhau decor đèn Noel. Không khí se lạnh như Châu Âu thu nhỏ.",
+              mustSee: ["Quảng trường Lâm Viên trang trí Noel", "Khu Hòa Bình đèn Giáng Sinh", "Chợ đêm Đà Lạt mùa Noel", "Hồ Xuân Hương lung linh đèn", "Nhà thờ Con Gà đêm Giáng Sinh"],
+              food: ["Lẩu nấm rừng + rượu vang nóng", "Bánh mì thịt nướng than", "Cá hồi Đà Lạt", "Hot chocolate Đà Lạt", "Atisô hầm gà"],
+              cafes: ["Shelter Coffee trang trí Noel", "Gió và Nước", "The Married Beans", "La Maison decor Châu Âu"],
+              photoTips: "Trang trí đèn Noel từ 1/12. Chụp tối 18:00–21:00. Nhà thờ Con Gà 24/12 lung linh nhất.",
+              sunrise: "Đồi thông Đa Thiện sương mù lạnh", sunset: "Đồi Robin nhìn toàn thành phố",
+              minDays: "2N1Đ", idealDays: "4N3Đ",
+              itinerary: {
+                "2N1Đ": ["Sáng: Đồi thông + Ga Đà Lạt", "Chiều: Hồ Xuân Hương + Quảng trường", "Tối: Chợ đêm Noel + cafes"],
+                "3N2Đ": ["Ngày 1: Đến + Ga cổ + Hồ Xuân Hương + Noel night", "Ngày 2: Đồi chè Cầu Đất + thác", "Ngày 3: Vườn hoa + Quảng trường + về"],
+                "4N3Đ": ["Ngày 1: Đến + Noel decor night", "Ngày 2: Đồi chè Cầu Đất sáng", "Ngày 3: Lang Biang dã quỳ cuối mùa", "Ngày 4: Thác Datanla + về"]
+              },
+              budget: { flight: "600K–1.3tr", hotel: "500K–1.8tr/đêm (Noel tăng)", food: "300–600K/ngày", transport: "150–350K/ngày", total2n: "3–5.5tr", total4n: "7–13tr" },
+              packing: ["Áo len dày + áo khoác", "Khăn + găng tay", "Outfit đỏ / xanh Noel rất đẹp", "Giày ấm"],
+              avoid: "24–31/12 đông nhất và giá cao nhất – book trước 3 tháng"
+            },
+            {
+              emoji: "🌴", destination: "Phú Quốc – Đảo Ngọc Cuối Năm", province: "Kiên Giang",
+              tag: "Mùa Khô Đỉnh & Countdown", tagColor: "#FFD700",
+              weather: "Nắng đẹp nhất 28–33°C, biển hoàn toàn lặng, không mưa",
+              highlight: "Tháng 12 là mùa đẹp nhất Phú Quốc – nắng hoàn hảo, biển trong như gương. Grand World countdown đêm Giao Thừa là sự kiện lớn nhất. Hành trình kết năm hoàn hảo.",
+              mustSee: ["Bãi Sao biển trong nhất năm", "Sunset Sanato hoàng hôn", "Grand World countdown New Year", "Tour 3 đảo + lặn san hô", "Làng chài Rạch Vẹm bình minh"],
+              food: ["Ghẹ + nhum nướng", "Bún quậy đặc sản", "Gỏi cá trích", "Nước mắm tươi Phú Quốc", "Hải sản resort"],
+              cafes: ["Cafe del Mar", "Long Beach Bar đêm Giao Thừa", "Ong & Anh Sunset Bar", "The Chill Sky Bar"],
+              photoTips: "Bãi Sao 6:00 sáng biển như gương. Hoàng hôn bãi Tây 17:30. Grand World 31/12 đèn countdown lung linh.",
+              sunrise: "Bãi Ông Lăng – bình minh đầu năm mới ý nghĩa", sunset: "Bãi Tây – đẹp nhất Việt Nam",
+              minDays: "2N1Đ", idealDays: "4N3Đ",
+              itinerary: {
+                "2N1Đ": ["Sáng: Bãi Sao", "Chiều: Grand World", "Tối: Hoàng hôn bãi Tây + hải sản"],
+                "3N2Đ": ["Ngày 1: Bãi Sao + hoàng hôn bãi Tây", "Ngày 2: Tour 3 đảo cả ngày", "Ngày 3: Grand World + về"],
+                "4N3Đ": ["Ngày 1: Bãi Sao + hoàng hôn", "Ngày 2: Tour 3 đảo", "Ngày 3: Grand World + Vinwonders", "Ngày 4: Rạch Vẹm bình minh + cáp treo + về"]
+              },
+              budget: { flight: "800K–2tr (Noel/Tết DL tăng)", hotel: "900K–3tr/đêm", food: "500–900K/ngày", transport: "200–450K/ngày", total2n: "4.5–9tr", total4n: "12–22tr" },
+              packing: ["Đồ bơi + phao bơi", "Đồ resort sang trọng", "Kem chống nắng SPF70+", "Outfit đẹp cho đêm Giao Thừa"],
+              avoid: "25/12 và 31/12 giá tăng 100–150% – book trước 3–4 tháng"
+            },
+            {
+              emoji: "🏖️", destination: "Mũi Né – Cuối Năm Gần HCM", province: "Bình Thuận",
+              tag: "Nghỉ Cuối Năm & Đồi Cát", tagColor: "#DEB887",
+              weather: "Nắng đẹp 27–33°C, gió mát, biển trong – tốt nhất cuối năm",
+              highlight: "Tháng 12 Mũi Né trời đẹp, gió biển mát mẻ. Gần HCM nhất chỉ 4–5 tiếng xe – lý tưởng cho chuyến nghỉ cuối năm ngắn ngày. Đồi cát đỏ ít người, resort giảm giá hơn Phú Quốc nhiều.",
+              mustSee: ["Đồi cát đỏ sunrise vắng người", "Suối Tiên", "Đồi cát trắng", "Bãi biển resort dài", "Tháp Chăm Poshanư"],
+              food: ["Hải sản tươi làng chài", "Bánh canh chả cá", "Thanh long Bình Thuận", "Gỏi cuốn Phan Thiết"],
+              cafes: ["Drift Café", "The Hammock Cafe", "Chez Leon", "Sandunes Beach Resort Bar"],
+              photoTips: "Đồi cát đỏ tháng 12 ít gió, nắng vàng dịu – dễ chụp hơn hè. Làng chài bình minh 5:30 sáng.",
+              sunrise: "Đồi cát đỏ", sunset: "Bãi biển ven resort nhìn về tây",
+              minDays: "2N1Đ", idealDays: "3N2Đ",
+              itinerary: {
+                "2N1Đ": ["5:30 sáng: Đồi cát đỏ + làng chài", "Chiều: Suối Tiên + cát trắng", "Tối: Resort nghỉ dưỡng"],
+                "3N2Đ": ["Ngày 1: Đến chiều + resort + hải sản tối", "Ngày 2: Đồi cát đỏ sáng + Suối Tiên chiều", "Ngày 3: Cát trắng + Poshanư + về HCM"],
+                "4N3Đ": ["Ngày 1: Đến + resort + biển", "Ngày 2: Đồi cát đỏ + làng chài sáng", "Ngày 3: Suối Tiên + cát trắng tối", "Ngày 4: Poshanư + mua đặc sản + về"]
+              },
+              budget: { flight: "Xe khách HCM: 200–350K khứ hồi", hotel: "500K–1.5tr/đêm resort", food: "300–550K/ngày", transport: "100–250K/ngày", total2n: "2–4tr", total4n: "4.5–8.5tr" },
+              packing: ["Kem chống nắng SPF50+", "Đồ bơi + áo khoác nhẹ tối", "Giày biển + sandal", "Outfit cuối năm nhẹ nhàng tươi sáng"],
+              avoid: "Nghỉ lễ 30/4 (nếu đặt sớm đón năm mới) đông – book trước"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+};
+
+const SpotCard = ({ spot, accentColor, index }) => {
+  const [tab, setTab] = useState("overview");
+  const tabs = [
+    { id: "overview", label: "📍 Tổng quan" },
+    { id: "itinerary", label: "🗓️ Lịch trình" },
+    { id: "food", label: "🍜 Ẩm thực" },
+    { id: "photo", label: "📸 Check-in" },
+    { id: "budget", label: "💰 Chi phí" },
+    { id: "packing", label: "🧳 Hành lý" },
+  ];
+  const rankLabel = ["🥇 Lựa chọn #1","🥈 Lựa chọn #2","🥉 Lựa chọn #3"][index] || "📍";
+
+  return (
+    <div style={{ background:"white", borderRadius:"16px", overflow:"hidden", boxShadow:"0 2px 16px rgba(0,0,0,0.07)", marginBottom:"16px", border:`1.5px solid ${accentColor}20` }}>
+      <div style={{ background:`linear-gradient(135deg, ${accentColor}12, ${accentColor}28)`, padding:"16px 20px", borderBottom:`2.5px solid ${accentColor}` }}>
+        <div style={{ display:"flex", alignItems:"center", gap:"10px", marginBottom:"6px" }}>
+          <span style={{ fontSize:"28px" }}>{spot.emoji}</span>
+          <div style={{ flex:1 }}>
+            <div style={{ fontSize:"10px", fontWeight:"700", color:accentColor, letterSpacing:"0.08em", marginBottom:"1px" }}>{rankLabel}</div>
+            <h4 style={{ margin:0, fontSize:"17px", fontWeight:"800", color:"#1a1a2e" }}>{spot.destination}</h4>
+            <div style={{ fontSize:"11px", color:"#888" }}>📍 {spot.province}</div>
+          </div>
+        </div>
+        <div style={{ display:"flex", gap:"6px", flexWrap:"wrap", marginBottom:"8px" }}>
+          <span style={{ background:spot.tagColor+"30", border:`1px solid ${spot.tagColor}`, color:"#333", padding:"2px 9px", borderRadius:"20px", fontSize:"11px", fontWeight:"600" }}>✨ {spot.tag}</span>
+          <span style={{ background:"#f5f5f5", padding:"2px 9px", borderRadius:"20px", fontSize:"11px", color:"#666" }}>🌡️ {spot.weather}</span>
+        </div>
+        <div style={{ display:"flex", gap:"8px", flexWrap:"wrap" }}>
+          <span style={{ background:accentColor+"20", padding:"3px 10px", borderRadius:"20px", fontSize:"11px", fontWeight:"700", color:accentColor }}>⏱️ Tối thiểu: {spot.minDays}</span>
+          <span style={{ background:accentColor, padding:"3px 10px", borderRadius:"20px", fontSize:"11px", fontWeight:"700", color:"white" }}>🌟 Lý tưởng: {spot.idealDays}</span>
+        </div>
+      </div>
+
+      <div style={{ display:"flex", overflowX:"auto", borderBottom:"1px solid #eee", background:"#fafafa" }}>
+        {tabs.map(t => (
+          <button key={t.id} onClick={() => setTab(t.id)} style={{ padding:"9px 12px", border:"none", background:tab===t.id?"white":"transparent", borderBottom:tab===t.id?`3px solid ${accentColor}`:"3px solid transparent", cursor:"pointer", fontSize:"11px", fontWeight:tab===t.id?"700":"500", color:tab===t.id?accentColor:"#888", whiteSpace:"nowrap", transition:"all 0.15s" }}>
+            {t.label}
+          </button>
+        ))}
+      </div>
+
+      <div style={{ padding:"16px 20px" }}>
+        {tab==="overview" && (
+          <div>
+            <p style={{ color:"#444", lineHeight:"1.7", fontSize:"13px", marginBottom:"12px" }}>{spot.highlight}</p>
+            <div style={{ display:"flex", flexWrap:"wrap", gap:"6px", marginBottom:"12px" }}>
+              {spot.mustSee.map((s,i) => <span key={i} style={{ background:"#f5f5f5", border:"1px solid #ddd", padding:"4px 10px", borderRadius:"20px", fontSize:"11px", color:"#444" }}>📌 {s}</span>)}
+            </div>
+            <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:"8px" }}>
+              <div style={{ background:"#FFF9E6", padding:"10px", borderRadius:"10px", borderLeft:"3px solid #FFD700" }}>
+                <div style={{ fontSize:"10px", fontWeight:"700", color:"#B8860B", marginBottom:"3px" }}>🌅 BÌNH MINH ĐẸP</div>
+                <div style={{ fontSize:"12px", color:"#555" }}>{spot.sunrise}</div>
+              </div>
+              <div style={{ background:"#FFF3E6", padding:"10px", borderRadius:"10px", borderLeft:"3px solid #FF8C00" }}>
+                <div style={{ fontSize:"10px", fontWeight:"700", color:"#CC5500", marginBottom:"3px" }}>🌇 HOÀNG HÔN ĐẸP</div>
+                <div style={{ fontSize:"12px", color:"#555" }}>{spot.sunset}</div>
+              </div>
+            </div>
+            {spot.avoid && <div style={{ background:"#FFF0F0", padding:"10px", borderRadius:"10px", marginTop:"8px", borderLeft:"3px solid #E74C3C" }}>
+              <div style={{ fontSize:"10px", fontWeight:"700", color:"#E74C3C", marginBottom:"3px" }}>⚠️ LƯU Ý KHI ĐI</div>
+              <div style={{ fontSize:"12px", color:"#555" }}>{spot.avoid}</div>
+            </div>}
+          </div>
+        )}
+        {tab==="itinerary" && (
+          <div>{Object.entries(spot.itinerary).map(([dur,days]) => (
+            <div key={dur} style={{ marginBottom:"16px" }}>
+              <span style={{ background:accentColor, color:"white", padding:"4px 12px", borderRadius:"20px", fontSize:"12px", fontWeight:"700", display:"inline-block", marginBottom:"8px" }}>📅 Lịch trình {dur}</span>
+              {days.map((d,i) => <div key={i} style={{ display:"flex", gap:"8px", alignItems:"flex-start", padding:"8px 10px", background:accentColor+"08", borderRadius:"8px", border:`1px solid ${accentColor}20`, marginBottom:"5px" }}>
+                <span style={{ background:accentColor, color:"white", width:"20px", height:"20px", borderRadius:"50%", display:"flex", alignItems:"center", justifyContent:"center", fontSize:"10px", fontWeight:"700", flexShrink:0, marginTop:"1px" }}>{i+1}</span>
+                <span style={{ fontSize:"12px", color:"#444", lineHeight:"1.5" }}>{d}</span>
+              </div>)}
+            </div>
+          ))}</div>
+        )}
+        {tab==="food" && (
+          <div>
+            <h5 style={{ fontSize:"13px", color:"#1a1a2e", marginBottom:"10px", fontWeight:"700" }}>🍜 Đặc sản không thể bỏ qua</h5>
+            <div style={{ display:"flex", flexDirection:"column", gap:"6px", marginBottom:"14px" }}>
+              {spot.food.map((f,i) => <div key={i} style={{ display:"flex", alignItems:"center", gap:"9px", padding:"8px 12px", background:"#FFF8F0", borderRadius:"8px", border:"1px solid #FFE4B5" }}>
+                <span style={{ fontSize:"16px" }}>{"🥘🍜🫕🍱🍤🦀🍢🧆".split("")[i%8]}</span>
+                <span style={{ fontSize:"12px", color:"#444", fontWeight:"500" }}>{f}</span>
+              </div>)}
+            </div>
+            <h5 style={{ fontSize:"13px", color:"#1a1a2e", marginBottom:"8px", fontWeight:"700" }}>☕ Quán cà phê check-in nổi bật</h5>
+            <div style={{ display:"flex", flexWrap:"wrap", gap:"6px" }}>
+              {spot.cafes.map((c,i) => <span key={i} style={{ background:"#F0F8FF", border:"1px solid #ADD8E6", padding:"5px 10px", borderRadius:"20px", fontSize:"11px", color:"#333" }}>☕ {c}</span>)}
+            </div>
+          </div>
+        )}
+        {tab==="photo" && (
+          <div>
+            <div style={{ background:"#F0F8FF", padding:"12px", borderRadius:"10px", marginBottom:"12px", borderLeft:`3px solid ${accentColor}` }}>
+              <div style={{ fontSize:"10px", fontWeight:"700", color:accentColor, marginBottom:"4px" }}>📷 MẸO CHỤP ẢNH & QUAY VLOG</div>
+              <div style={{ fontSize:"12px", color:"#444", lineHeight:"1.7" }}>{spot.photoTips}</div>
+            </div>
+            <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:"8px", marginBottom:"10px" }}>
+              <div style={{ background:"#FFF9E6", padding:"10px", borderRadius:"10px" }}>
+                <div style={{ fontSize:"10px", fontWeight:"700", color:"#B8860B", marginBottom:"3px" }}>🌅 BÌNH MINH</div>
+                <div style={{ fontSize:"12px", color:"#555" }}>{spot.sunrise}</div>
+              </div>
+              <div style={{ background:"#FFF3E6", padding:"10px", borderRadius:"10px" }}>
+                <div style={{ fontSize:"10px", fontWeight:"700", color:"#CC5500", marginBottom:"3px" }}>🌇 HOÀNG HÔN</div>
+                <div style={{ fontSize:"12px", color:"#555" }}>{spot.sunset}</div>
+              </div>
+            </div>
+            <div style={{ background:"#F5F0FA", padding:"12px", borderRadius:"10px" }}>
+              <div style={{ fontSize:"10px", fontWeight:"700", color:"#7B5EA7", marginBottom:"5px" }}>👗 OUTFIT ĐỂ LÊN HÌNH ĐẸP</div>
+              <div style={{ fontSize:"12px", color:"#555", lineHeight:"1.6" }}>{spot.packing[spot.packing.length-1]}</div>
+            </div>
+          </div>
+        )}
+        {tab==="budget" && (
+          <div>
+            <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:"8px", marginBottom:"12px" }}>
+              {[["✈️ Vé / Di chuyển",spot.budget.flight],["🏨 Khách sạn",spot.budget.hotel],["🍜 Ăn uống",spot.budget.food],["🛵 Di chuyển tại chỗ",spot.budget.transport]].map(([l,v],i) => (
+                <div key={i} style={{ background:"#f9f9f9", padding:"10px", borderRadius:"10px", border:"1px solid #eee" }}>
+                  <div style={{ fontSize:"11px", color:"#666", marginBottom:"3px" }}>{l}</div>
+                  <div style={{ fontSize:"13px", fontWeight:"700", color:"#1a1a2e" }}>{v}</div>
+                </div>
+              ))}
+            </div>
+            <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:"8px" }}>
+              <div style={{ background:accentColor+"15", padding:"12px", borderRadius:"10px", border:`2px solid ${accentColor}30` }}>
+                <div style={{ fontSize:"10px", fontWeight:"700", color:accentColor, marginBottom:"3px" }}>TỔNG CHUYẾN {spot.minDays}</div>
+                <div style={{ fontSize:"19px", fontWeight:"800", color:"#1a1a2e" }}>{spot.budget.total2n}</div>
+                <div style={{ fontSize:"10px", color:"#888" }}>/ người (tiết kiệm)</div>
+              </div>
+              <div style={{ background:accentColor, padding:"12px", borderRadius:"10px" }}>
+                <div style={{ fontSize:"10px", fontWeight:"700", color:"rgba(255,255,255,0.8)", marginBottom:"3px" }}>TỔNG CHUYẾN {spot.idealDays}</div>
+                <div style={{ fontSize:"19px", fontWeight:"800", color:"white" }}>{spot.budget.total4n}</div>
+                <div style={{ fontSize:"10px", color:"rgba(255,255,255,0.7)" }}>/ người (thoải mái)</div>
+              </div>
+            </div>
+            <p style={{ fontSize:"10px", color:"#aaa", marginTop:"8px", fontStyle:"italic" }}>* Từ TP.HCM, chưa bao gồm vé tham quan. Giá mang tính tham khảo.</p>
+          </div>
+        )}
+        {tab==="packing" && (
+          <div>
+            <h5 style={{ fontSize:"13px", color:"#1a1a2e", marginBottom:"10px", fontWeight:"700" }}>🧳 Checklist hành lý theo mùa</h5>
+            {spot.packing.map((item,i) => (
+              <div key={i} style={{ display:"flex", alignItems:"center", gap:"8px", padding:"8px 12px", background:"#F5FAF5", borderRadius:"8px", border:"1px solid #D4EDDA", marginBottom:"6px" }}>
+                <span style={{ width:"18px", height:"18px", background:"#28A745", borderRadius:"50%", display:"flex", alignItems:"center", justifyContent:"center", color:"white", fontSize:"10px", flexShrink:0 }}>✓</span>
+                <span style={{ fontSize:"12px", color:"#444" }}>{item}</span>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
+export default function VietnamTravelPlanner() {
+  const [activeQ, setActiveQ] = useState("q1");
+  const [activeMonth, setActiveMonth] = useState(0);
+  const quarter = travelData.quarters.find(q => q.id === activeQ);
+  const monthData = quarter.destinations[activeMonth];
+
+  return (
+    <div style={{ fontFamily:"'Inter',-apple-system,sans-serif", background:"#F8F9FA", minHeight:"100vh" }}>
+      {/* Hero */}
+      <div style={{ background:"linear-gradient(135deg,#1a1a2e 0%,#16213e 50%,#0f3460 100%)", color:"white", padding:"32px 20px 24px", textAlign:"center", position:"relative", overflow:"hidden" }}>
+        <div style={{ position:"relative", zIndex:1 }}>
+          <div style={{ fontSize:"11px", letterSpacing:"0.35em", color:"#E8A87C", fontWeight:"700", marginBottom:"8px" }}>🇻🇳 MIỀN TRUNG & MIỀN NAM VIỆT NAM</div>
+          <h1 style={{ margin:"0 0 6px", fontSize:"clamp(22px,5vw,36px)", fontWeight:"900", lineHeight:1.1 }}>
+            Vietnam Travel<br/><span style={{ color:"#E8A87C" }}>Planner 2026</span>
+          </h1>
+          <p style={{ color:"rgba(255,255,255,0.55)", fontSize:"12px", margin:"0 0 16px", lineHeight:1.6 }}>
+            36 địa điểm đẹp nhất • 12 tháng chi tiết<br/>
+            Dành cho tín đồ văn hóa – ẩm thực – check-in – vlog
+          </p>
+          <div style={{ display:"flex", justifyContent:"center", gap:"20px", flexWrap:"wrap" }}>
+            {[["36","Điểm đến"],["12","Tháng"],["100+","Món & Cafe"],["3","Điểm/tháng"]].map(([n,l]) => (
+              <div key={l} style={{ textAlign:"center" }}>
+                <div style={{ fontSize:"22px", fontWeight:"900", color:"#E8A87C" }}>{n}</div>
+                <div style={{ fontSize:"10px", color:"rgba(255,255,255,0.45)", letterSpacing:"0.05em" }}>{l}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Quarter tabs */}
+      <div style={{ display:"flex", gap:"6px", padding:"12px 16px", overflowX:"auto", background:"white", boxShadow:"0 2px 8px rgba(0,0,0,0.06)", position:"sticky", top:0, zIndex:10 }}>
+        {travelData.quarters.map(q => (
+          <button key={q.id} onClick={() => { setActiveQ(q.id); setActiveMonth(0); }}
+            style={{ padding:"8px 14px", border:"none", borderRadius:"10px", cursor:"pointer", background:activeQ===q.id?q.accentColor:"#f0f0f0", color:activeQ===q.id?"white":"#666", fontWeight:"700", fontSize:"12px", whiteSpace:"nowrap", flexShrink:0, transition:"all 0.2s", boxShadow:activeQ===q.id?`0 3px 10px ${q.accentColor}40`:"none" }}>
+            {q.name}
+            <span style={{ display:"block", fontSize:"9px", fontWeight:"400", opacity:0.85, marginTop:"1px" }}>{q.months}</span>
+          </button>
+        ))}
+      </div>
+
+      {/* Month selector */}
+      <div style={{ background:quarter.bgGradient, padding:"12px 16px 6px", borderBottom:`1px solid ${quarter.accentColor}20` }}>
+        <div style={{ display:"flex", gap:"8px", overflowX:"auto", paddingBottom:"2px" }}>
+          {quarter.destinations.map((dest,i) => (
+            <button key={i} onClick={() => setActiveMonth(i)}
+              style={{ padding:"7px 16px", border:"none", borderRadius:"10px", cursor:"pointer", background:activeMonth===i?quarter.accentColor:"rgba(255,255,255,0.75)", color:activeMonth===i?"white":"#555", fontWeight:"700", fontSize:"12px", whiteSpace:"nowrap", flexShrink:0, transition:"all 0.15s", boxShadow:activeMonth===i?`0 2px 8px ${quarter.accentColor}40`:"none" }}>
+              {dest.month}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Month header */}
+      <div style={{ background:quarter.bgGradient, padding:"10px 16px 4px" }}>
+        <div style={{ display:"flex", alignItems:"center", gap:"8px" }}>
+          <div style={{ width:"3px", height:"28px", background:quarter.accentColor, borderRadius:"2px", flexShrink:0 }} />
+          <div>
+            <div style={{ fontSize:"13px", fontWeight:"800", color:quarter.accentColor }}>{monthData.month} – 3 điểm đến tốt nhất</div>
+            <div style={{ fontSize:"11px", color:"#888" }}>Chọn điểm phù hợp với sở thích của bạn • {quarter.name}</div>
+          </div>
+        </div>
+      </div>
+
+      {/* Spot cards */}
+      <div style={{ padding:"8px 16px 32px", background:quarter.bgGradient }}>
+        {monthData.spots.map((spot,i) => (
+          <SpotCard key={i} spot={spot} accentColor={quarter.accentColor} index={i} />
+        ))}
+      </div>
+
+      {/* Footer */}
+      <div style={{ background:"#1a1a2e", color:"rgba(255,255,255,0.4)", padding:"20px 16px", textAlign:"center", fontSize:"11px", lineHeight:"1.9" }}>
+        <div style={{ color:"#E8A87C", fontWeight:"700", fontSize:"13px", marginBottom:"6px" }}>🗺️ Vietnam Travel Planner 2026</div>
+        36 điểm đến • Miền Trung & Miền Nam Việt Nam • Xuất phát từ TP.HCM<br/>
+        Lịch trình 2N1Đ – 3N2Đ – 4N3Đ • Budget mỗi điểm • Mẹo check-in & vlog<br/>
+        <span style={{ color:"rgba(255,255,255,0.2)", fontSize:"10px" }}>Dành cho travel blogger & content creator yêu văn hóa – ẩm thực – nhiếp ảnh</span>
+      </div>
+    </div>
+  );
+}
